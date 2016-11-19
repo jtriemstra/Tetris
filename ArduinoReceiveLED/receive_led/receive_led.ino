@@ -154,12 +154,10 @@ void decodeTetrisColor(uint8_t color, uint8_t &red, uint8_t &green, uint8_t &blu
 }
 
 
-void showTetrisRow(uint8_t codedColors[]){
+void makeTetrisRow(uint8_t codedColors[], byte output[], int outputRowIndex){
   uint8_t decodedGreen[TETRIS_WIDTH];
   uint8_t decodedRed[TETRIS_WIDTH];
   uint8_t decodedBlue[TETRIS_WIDTH];
-  uint8_t bits1arr[24];
-  uint8_t bits2arr[24];
   uint8_t bits1, bits2;
   
   for(int i=0; i<TETRIS_WIDTH; i++){
@@ -183,8 +181,8 @@ void showTetrisRow(uint8_t codedColors[]){
         bits2 = bits2 | ((1 << j) & decodedGreen[i]);
       }
     }
-    bits1arr[j] = bits1 << 2;
-    bits2arr[j] = bits2;
+    output[(outputRowIndex * 2 * 24) + 2*j] = bits1 << 2;
+    output[(outputRowIndex * 2 * 24) + 2*j + 1] = bits2;
   }
   for (int j=0; j<8; j++){
     bits1 = 0;
@@ -199,8 +197,8 @@ void showTetrisRow(uint8_t codedColors[]){
         bits2 = bits2 | ((1 << j) & decodedRed[i]);
       }
     }
-    bits1arr[j+8] = bits1 << 2;
-    bits2arr[j+8] = bits2;
+    output[(outputRowIndex * 2 * 24) + 2 * (j + 8)] = bits1 << 2;
+    output[(outputRowIndex * 2 * 24) + 2 * (j + 8) + 1] = bits2;
   }
   for (int j=0; j<8; j++){
     bits1 = 0;
@@ -215,13 +213,11 @@ void showTetrisRow(uint8_t codedColors[]){
         bits2 = bits2 | ((1 << j) & decodedBlue[i]);
       }
     }
-    bits1arr[j+16] = bits1 << 2;
-    bits2arr[j+16] = bits2;
+    output[(outputRowIndex * 2 * 24) + 2 * (j + 16)] = bits1 << 2;
+    output[(outputRowIndex * 2 * 24) + 2 * (j + 16) + 1] = bits2;
   }
 
-  for (int j=0; j<24; j++){
-    sendBitX8(bits1arr[j], bits2arr[j]);
-  } 
+  
 }
 
 void uncompressTetrisRow(uint8_t compressedColors[], uint8_t uncompressedColors[]){
@@ -231,6 +227,11 @@ void uncompressTetrisRow(uint8_t compressedColors[], uint8_t uncompressedColors[
   }
 }
 
+void showTetris(byte output[]){
+  for (int i=0; i<2*24*TETRIS_LENGTH; i++){
+    sendBitX8(output[i], output[i+1]);
+  } 
+}
 
 int loopCount = 0;
 bool blnIncrement = true;
@@ -252,6 +253,8 @@ void loop() {
   int intCommandRead = 0;
   int intBufferSize = TETRIS_LENGTH * (TETRIS_WIDTH / 2);
   byte bytCommand[intBufferSize];
+  byte bytDecodedColorSplits[2 * 24 * TETRIS_LENGTH];
+  for (int i=0; i<2 * 24 * TETRIS_LENGTH; i++) bytDecodedColorSplits[i] = 0;
   
   while (intCommandRead < intBufferSize)
   {
@@ -260,24 +263,22 @@ void loop() {
     }
   }
 
-    uint8_t compressedColors[TETRIS_WIDTH / 2];
-    uint8_t uncompressedColors[TETRIS_WIDTH];
-    for (int j=0; j<TETRIS_WIDTH / 2; j++) compressedColors[j] = 0;
-    for (int j=0; j<TETRIS_WIDTH; j++) uncompressedColors[j] = 0;
+  uint8_t compressedColors[TETRIS_WIDTH / 2];
+  uint8_t uncompressedColors[TETRIS_WIDTH];
+  for (int j=0; j<TETRIS_WIDTH / 2; j++) compressedColors[j] = 0;
+  for (int j=0; j<TETRIS_WIDTH; j++) uncompressedColors[j] = 0;
   
-  //for (int i=0; i<TETRIS_LENGTH; i++){
-  for (int i=0; i<2; i++){
-    
+  for (int i=0; i<TETRIS_LENGTH; i++){
+  
     for (int j=0; j<(TETRIS_WIDTH / 2); j++){
       compressedColors[j] = bytCommand[i*(TETRIS_WIDTH / 2) + j];
     }
     uncompressTetrisRow(compressedColors, uncompressedColors);
-        
-    cli();  
-    showTetrisRow(uncompressedColors);
-    sei();  
+         
+    makeTetrisRow(uncompressedColors, bytDecodedColorSplits, i); 
   }
-  
-delay(100);
+
+  showTetris(bytDecodedColorSplits);
+  delay(100);
   //show();
 }
