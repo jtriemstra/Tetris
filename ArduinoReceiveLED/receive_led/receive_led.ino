@@ -245,6 +245,12 @@ void showTetrisRows(byte output[], int rowCount){
   } 
 }
 
+void serialEcho(byte output[]){
+  for (int i=0; i<2*24*TETRIS_LENGTH; i++){
+    Serial.write(output[i]);
+  }
+}
+
 int loopCount = 0;
 bool blnIncrement = true;
 bool blnRunning = false;
@@ -290,10 +296,11 @@ void loop() {
     makeTetrisRow(uncompressedColors, bytDecodedColorSplits, i); 
   }
 
-  showTetris(bytDecodedColorSplits);
+
+  //showTetris(bytDecodedColorSplits);
   //showTetrisRows(bytDecodedColorSplits, 5);
-  
-  delay(100);
+  serialEcho(bytDecodedColorSplits);
+  delay(10000);
 
   loopCount++;
   //show();

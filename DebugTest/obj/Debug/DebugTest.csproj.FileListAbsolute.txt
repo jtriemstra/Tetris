@@ -1,0 +1,6 @@
+C:\TestProjects\Tetris\DebugTest\bin\Debug\DebugTest.exe.config
+C:\TestProjects\Tetris\DebugTest\bin\Debug\DebugTest.exe
+C:\TestProjects\Tetris\DebugTest\bin\Debug\DebugTest.pdb
+C:\TestProjects\Tetris\DebugTest\obj\Debug\DebugTest.csprojResolveAssemblyReference.cache
+C:\TestProjects\Tetris\DebugTest\obj\Debug\DebugTest.exe
+C:\TestProjects\Tetris\DebugTest\obj\Debug\DebugTest.pdb

@@ -17,6 +17,11 @@ namespace TetrisConsoleLED
         static void Main(string[] args)
         {
             m_objSerial = new SerialPort("COM4", 9600);
+            m_objSerial.DataBits = 8;
+            m_objSerial.Parity = Parity.None;
+            m_objSerial.StopBits = StopBits.One;
+            m_objSerial.Handshake = Handshake.None;
+            m_objSerial.Encoding = System.Text.Encoding.Default;
             m_objSerial.Open();
 
             Game g = new Game(RefreshConsole);
@@ -50,6 +55,35 @@ namespace TetrisConsoleLED
             }
 
             m_intLoopCount++;
+
+            Task t = ReadSerialEcho();
+            t.Wait();
+        }
+
+        private static async Task ReadSerialEcho()
+        {
+            int intBytesRead = 0;
+            byte[] bytSerialEcho = new byte[2 * 24 * Grid.HEIGHT];
+            while (intBytesRead < 2 * 24 * Grid.HEIGHT)
+            {
+                intBytesRead += await m_objSerial.BaseStream.ReadAsync(bytSerialEcho, intBytesRead, 2 * 24 * Grid.HEIGHT - intBytesRead);
+            }
+
+            for (int i = 0; i < bytSerialEcho.Length; i += 2)
+            {
+                for (int j = 0; j < 8; j++)
+                {
+                    if (((1 << (7 - j)) & bytSerialEcho[i]) > 0) System.Diagnostics.Debug.Write("1");
+                    else System.Diagnostics.Debug.Write("0");
+                }
+                System.Diagnostics.Debug.Write(" ");
+                for (int j = 0; j < 8; j++)
+                {
+                    if (((1 << (7 - j)) & bytSerialEcho[i + 1]) > 0) System.Diagnostics.Debug.Write("1");
+                    else System.Diagnostics.Debug.Write("0");
+                }
+                System.Diagnostics.Debug.WriteLine("");
+            }
         }
 
         private static int GetColor(Shape.Types objType)
