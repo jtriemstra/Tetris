@@ -233,6 +233,18 @@ void showTetris(byte output[]){
   } 
 }
 
+void showTetrisRow(byte output[], int rowIndex){
+  for (int i=rowIndex*2*24; i<2*24; i=i+2){
+    sendBitX8(output[i], output[i+1]);
+  } 
+}
+
+void showTetrisRows(byte output[], int rowCount){
+  for (int i=0; i<2*24*rowCount; i=i+2){
+    sendBitX8(output[i], output[i+1]);
+  } 
+}
+
 int loopCount = 0;
 bool blnIncrement = true;
 bool blnRunning = false;
@@ -279,6 +291,10 @@ void loop() {
   }
 
   showTetris(bytDecodedColorSplits);
+  //showTetrisRows(bytDecodedColorSplits, 5);
+  
   delay(100);
+
+  loopCount++;
   //show();
 }
