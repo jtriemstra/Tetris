@@ -1,0 +1,8 @@
+C:\TestProjects\Tetris\TetrisConsole\bin\Debug\TetrisConsole.exe.config
+C:\TestProjects\Tetris\TetrisConsole\obj\Debug\TetrisConsole.csprojResolveAssemblyReference.cache
+C:\TestProjects\Tetris\TetrisConsole\bin\Debug\TetrisConsole.exe
+C:\TestProjects\Tetris\TetrisConsole\bin\Debug\TetrisConsole.pdb
+C:\TestProjects\Tetris\TetrisConsole\bin\Debug\TetrisCommon.dll
+C:\TestProjects\Tetris\TetrisConsole\bin\Debug\TetrisCommon.pdb
+C:\TestProjects\Tetris\TetrisConsole\obj\Debug\TetrisConsole.exe
+C:\TestProjects\Tetris\TetrisConsole\obj\Debug\TetrisConsole.pdb

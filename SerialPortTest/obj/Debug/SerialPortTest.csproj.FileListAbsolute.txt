@@ -1,0 +1,6 @@
+C:\TestProjects\Tetris\SerialPortTest\bin\Debug\SerialPortTest.exe.config
+C:\TestProjects\Tetris\SerialPortTest\bin\Debug\SerialPortTest.exe
+C:\TestProjects\Tetris\SerialPortTest\bin\Debug\SerialPortTest.pdb
+C:\TestProjects\Tetris\SerialPortTest\obj\Debug\SerialPortTest.csprojResolveAssemblyReference.cache
+C:\TestProjects\Tetris\SerialPortTest\obj\Debug\SerialPortTest.exe
+C:\TestProjects\Tetris\SerialPortTest\obj\Debug\SerialPortTest.pdb

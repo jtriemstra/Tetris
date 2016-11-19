@@ -1,0 +1,8 @@
+C:\TestProjects\Tetris\TetrisConsoleLED\bin\Debug\TetrisConsoleLED.exe.config
+C:\TestProjects\Tetris\TetrisConsoleLED\bin\Debug\TetrisConsoleLED.exe
+C:\TestProjects\Tetris\TetrisConsoleLED\bin\Debug\TetrisConsoleLED.pdb
+C:\TestProjects\Tetris\TetrisConsoleLED\bin\Debug\TetrisCommon.dll
+C:\TestProjects\Tetris\TetrisConsoleLED\bin\Debug\TetrisCommon.pdb
+C:\TestProjects\Tetris\TetrisConsoleLED\obj\Debug\TetrisConsoleLED.csprojResolveAssemblyReference.cache
+C:\TestProjects\Tetris\TetrisConsoleLED\obj\Debug\TetrisConsoleLED.exe
+C:\TestProjects\Tetris\TetrisConsoleLED\obj\Debug\TetrisConsoleLED.pdb

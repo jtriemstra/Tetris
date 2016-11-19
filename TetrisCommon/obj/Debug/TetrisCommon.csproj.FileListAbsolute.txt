@@ -1,0 +1,5 @@
+C:\TestProjects\Tetris\TetrisCommon\bin\Debug\TetrisCommon.dll
+C:\TestProjects\Tetris\TetrisCommon\bin\Debug\TetrisCommon.pdb
+C:\TestProjects\Tetris\TetrisCommon\obj\Debug\TetrisCommon.csprojResolveAssemblyReference.cache
+C:\TestProjects\Tetris\TetrisCommon\obj\Debug\TetrisCommon.dll
+C:\TestProjects\Tetris\TetrisCommon\obj\Debug\TetrisCommon.pdb
