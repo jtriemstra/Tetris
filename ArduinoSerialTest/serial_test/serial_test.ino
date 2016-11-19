@@ -7,8 +7,9 @@ void setup() {
 void loop() {
   // put your main code here, to run repeatedly:
   int intBytesRead = 0;
-  int intBufferSize = 1;
+  int intBufferSize = 100;
   byte bytBuffer[intBufferSize];
+  for (int i=0; i<intBufferSize; i++) bytBuffer[i] = 254;
   
   while (intBytesRead < intBufferSize)
   {
@@ -17,7 +18,9 @@ void loop() {
     }
   }
 
-  delay(1000);
+  //delay(2000);
 
-  Serial.write(bytBuffer[0]);
+  for(int i=0; i<intBufferSize; i++){
+    Serial.write(bytBuffer[i]);
+  }
 }
