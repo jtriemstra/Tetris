@@ -38,7 +38,7 @@ namespace TetrisConsoleLED
                 {
                     bytRow[x / 2] = (byte)((GetColor(objPoints[x, y]) << 4) | GetColor(objPoints[x + 1, y]));
                 }
-                if (m_intLoopCount > 8)
+                if (m_intLoopCount > -1)
                 {
                     m_objSerial.Write(bytRow, 0, Grid.WIDTH / 2);
                     Console.Write(bytRow[0]);
@@ -67,6 +67,7 @@ namespace TetrisConsoleLED
             while (intBytesRead < 2 * 24 * Grid.HEIGHT)
             {
                 intBytesRead += await m_objSerial.BaseStream.ReadAsync(bytSerialEcho, intBytesRead, 2 * 24 * Grid.HEIGHT - intBytesRead);
+                int y = 0;
             }
 
             for (int i = 0; i < bytSerialEcho.Length; i += 2)
