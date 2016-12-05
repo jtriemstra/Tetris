@@ -234,9 +234,12 @@ void uncompressTetrisRow(){
 }
 
 void showTetris(){
+  cli();
   for (int i=0; i<2*24*TETRIS_LENGTH; i=i+2){
     sendBitX8(m_bytDecodedColorSplits[i], m_bytDecodedColorSplits[i+1]);
   } 
+  sei();
+  show();
 }
 
 void showTetrisRow(int rowIndex){
