@@ -1,0 +1,11 @@
+C:\TestProjects\Tetris\TetrisWinFormLED\bin\Debug\TetrisWinFormLED.exe.config
+C:\TestProjects\Tetris\TetrisWinFormLED\obj\Debug\TetrisWinFormLED.csprojResolveAssemblyReference.cache
+C:\TestProjects\Tetris\TetrisWinFormLED\obj\Debug\TetrisWinFormLED.Form1.resources
+C:\TestProjects\Tetris\TetrisWinFormLED\obj\Debug\TetrisWinFormLED.Properties.Resources.resources
+C:\TestProjects\Tetris\TetrisWinFormLED\obj\Debug\TetrisWinFormLED.csproj.GenerateResource.Cache
+C:\TestProjects\Tetris\TetrisWinFormLED\bin\Debug\TetrisWinFormLED.exe
+C:\TestProjects\Tetris\TetrisWinFormLED\bin\Debug\TetrisWinFormLED.pdb
+C:\TestProjects\Tetris\TetrisWinFormLED\bin\Debug\TetrisCommon.dll
+C:\TestProjects\Tetris\TetrisWinFormLED\bin\Debug\TetrisCommon.pdb
+C:\TestProjects\Tetris\TetrisWinFormLED\obj\Debug\TetrisWinFormLED.exe
+C:\TestProjects\Tetris\TetrisWinFormLED\obj\Debug\TetrisWinFormLED.pdb

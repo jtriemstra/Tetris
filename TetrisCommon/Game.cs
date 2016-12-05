@@ -14,7 +14,7 @@ namespace TetrisCommon
         private Shape m_objCurrentShape;
         private Grid m_objGrid = new Grid();
         private State m_objCurrentState = State.IDLE;
-        private int m_intDropDelay = 5000;
+        private int m_intDropDelay = 1000;
         private RefreshDisplay m_fnRefreshDisplay;
         private DateTime m_dtStopClearing;
 
@@ -61,8 +61,11 @@ namespace TetrisCommon
         {
             if (m_objCurrentState == State.IDLE)
             {
+                Random objRand = new Random();
+                
                 m_objCurrentState = State.SHAPE_LIVE;
-                m_objCurrentShape = new Shape(Shape.Types.SQUARE);
+                m_objCurrentShape = new Shape((Shape.Types) objRand.Next(1,8));
+                m_objCurrentShape.Center();
                 m_dtNextDrop = DateTime.Now.AddMilliseconds(m_intDropDelay);
                 return true;
             }

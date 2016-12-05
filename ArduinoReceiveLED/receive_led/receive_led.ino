@@ -139,7 +139,7 @@ void decodeTetrisColor(uint8_t color, uint8_t &red, uint8_t &green, uint8_t &blu
     case 0:
       red = 0;      green = 0;      blue = 0;      break;
      case 1:
-      red = 248;      green = 0;      blue = 0;      break;
+      red = 127;      green = 0;      blue = 0;      break;
      case 2:
       red = 0;       green = 127;      blue = 0;      break;
      case 3:
@@ -173,28 +173,28 @@ void makeTetrisRow(uint8_t codedColors[], byte output[], int outputRowIndex){
     bits2 = 0;
     for(int i=0; i<TETRIS_WIDTH; i++){      
       if (i >= 4){
-        //bits1 = bits1 << 1;
-        bits1 = bits1 | ((1 << (7-j)) & decodedGreen[i]);
+        bits1 = bits1 << 1;
+        bits1 = bits1 | (((1 << j) & decodedGreen[i]) >> j);
       }
       else {
-        //bits2 = bits2 << 1;
-        bits2 = bits2 | ((1 << (7-j)) & decodedGreen[i]);
+        bits2 = bits2 << 1;
+        bits2 = bits2 | (((1 << j) & decodedGreen[i]) >> j);
       }
     }
     output[(outputRowIndex * 2 * 24) + 2*j] = bits1 << 2;
     output[(outputRowIndex * 2 * 24) + 2*j + 1] = bits2;
   }
-  for (int j=0; j<8; j++){
+  for (uint8_t j=0; j<8; j++){
     bits1 = 0;
     bits2 = 0;
     for(int i=0; i<TETRIS_WIDTH; i++){      
       if (i >= 4){
-        //bits1 = bits1 << 1;
-        bits1 = bits1 | ((1 << (7-j)) & decodedRed[i]);
+        bits1 = bits1 << 1;
+        bits1 = bits1 | (((1 << j) & decodedRed[i]) >> j);
       }
       else {
-        //bits2 = bits2 << 1;
-        bits2 = bits2 | ((1 << (7-j)) & decodedRed[i]);
+        bits2 = bits2 << 1;
+        bits2 = bits2 | (((1 << j) & decodedRed[i]) >> j);
       }
     }
     output[(outputRowIndex * 2 * 24) + 2 * (j + 8)] = bits1 << 2;
@@ -205,12 +205,12 @@ void makeTetrisRow(uint8_t codedColors[], byte output[], int outputRowIndex){
     bits2 = 0;
     for(int i=0; i<TETRIS_WIDTH; i++){      
       if (i >= 4){
-       // bits1 = bits1 << 1;
-        bits1 = bits1 | ((1 << (7-j)) & decodedBlue[i]);
+        bits1 = bits1 << 1;
+        bits1 = bits1 | (((1 << j) & decodedBlue[i]) >> j);
       }
       else {
-        //bits2 = bits2 << 1;
-        bits2 = bits2 | ((1 << (7-j)) & decodedBlue[i]);
+        bits2 = bits2 << 1;
+        bits2 = bits2 | (((1 << j) & decodedBlue[i]) >> j);
       }
     }
     output[(outputRowIndex * 2 * 24) + 2 * (j + 16)] = bits1 << 2;

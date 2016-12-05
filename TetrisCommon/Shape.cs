@@ -124,6 +124,14 @@ namespace TetrisCommon
             return intReturn;
         }
 
+        public void Center()
+        {
+            foreach (Point p in m_objPoints)
+            {
+                p.X += 3;
+            }
+        }
+
         public void MoveDown()
         {
             foreach (Point p in m_objPoints)
