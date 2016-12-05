@@ -50,6 +50,7 @@ namespace TetrisConsoleLED
 
             m_intLoopCount++;
 
+            //TODO: figure out why these fix the output
             Task t = ReadSerial();
             t.Wait();
         }
