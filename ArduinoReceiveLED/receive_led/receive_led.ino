@@ -228,9 +228,12 @@ void uncompressTetrisRow(uint8_t compressedColors[], uint8_t uncompressedColors[
 }
 
 void showTetris(byte output[]){
+  cli();
   for (int i=0; i<2*24*TETRIS_LENGTH; i=i+2){
     sendBitX8(output[i], output[i+1]);
   } 
+  sei();
+  show();
 }
 
 void showTetrisRow(byte output[], int rowIndex){
