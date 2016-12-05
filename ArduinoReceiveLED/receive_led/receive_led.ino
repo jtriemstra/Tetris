@@ -291,13 +291,20 @@ void loop() {
     uncompressTetrisRow(compressedColors, uncompressedColors);
          
     makeTetrisRow(uncompressedColors, bytDecodedColorSplits, i); 
-  }
 
+     
+  }
+ 
+    
   showTetris(bytDecodedColorSplits);
   //showTetrisRows(bytDecodedColorSplits, 5);
   
+    Serial.write(255);
+    Serial.write(255);
   delay(100);
 
   loopCount++;
   //show();
+
+  
 }
