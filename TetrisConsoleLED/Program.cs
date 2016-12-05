@@ -33,8 +33,7 @@ namespace TetrisConsoleLED
                 {
                     bytRow[x / 2] = (byte)((GetColor(objPoints[x, y]) << 4) | GetColor(objPoints[x + 1, y]));
                 }
-                if (m_intLoopCount > 8)
-                {
+                
                     m_objSerial.Write(bytRow, 0, Grid.WIDTH / 2);
                     Console.Write(bytRow[0]);
                     Console.Write(" ");
@@ -46,7 +45,7 @@ namespace TetrisConsoleLED
                     Console.Write(" ");
                     Console.Write(bytRow[4]);
                     Console.WriteLine(" ");
-                }
+                
             }
 
             m_intLoopCount++;
