@@ -114,6 +114,14 @@ namespace TetrisCommon
             }
         }
 
+        public void Center()
+        {
+            foreach (Point p in m_objPoints)
+            {
+                p.X += 3;
+            }
+        }
+
         public int BottomRow()
         {
             int intReturn = Int32.MinValue;

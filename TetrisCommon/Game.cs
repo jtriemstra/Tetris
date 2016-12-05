@@ -63,6 +63,7 @@ namespace TetrisCommon
             {
                 m_objCurrentState = State.SHAPE_LIVE;
                 m_objCurrentShape = new Shape(Shape.Types.SQUARE);
+                m_objCurrentShape.Center();
                 return true;
             }
 
