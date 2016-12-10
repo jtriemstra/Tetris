@@ -88,16 +88,15 @@ namespace TetrisWinFormLED
             m_intLoopCount++;
 
             //TODO: figure out why these fix the output
-            Task t = ReadSerial();
-            Console.WriteLine(DateTime.Now);
-            bool blnTimeout = t.Wait(2000);
+            //Task t = ReadSerial();
             
-            Console.WriteLine("task completed? " + blnTimeout);
-            Console.WriteLine(DateTime.Now);
-            //m_blnIsDisplaying = false;
+            //bool blnTimeout = t.Wait(1000);
+            
+            //Console.WriteLine("task completed? " + blnTimeout);
+            m_blnIsDisplaying = false;
         }
 
-        const int BYTES_PER_BATCH = 2;
+        const int BYTES_PER_BATCH = Grid.HEIGHT * Grid.WIDTH / 2;
 
         static async Task ReadSerial()
         {
@@ -113,7 +112,16 @@ namespace TetrisWinFormLED
             Console.WriteLine("all bytes read");
             m_blnIsDisplaying = false;
 
-            for (int i = 0; i < bytSerialEcho.Length; i += 2)
+            for (int i = 0; i < bytSerialEcho.Length; i += 5)
+            {
+                Console.Write(bytSerialEcho[i]);
+                Console.Write(bytSerialEcho[i+1]);
+                Console.Write(bytSerialEcho[i+2]);
+                Console.Write(bytSerialEcho[i+3]);
+                Console.WriteLine(bytSerialEcho[i+4]);
+            }
+
+            /*for (int i = 0; i < bytSerialEcho.Length; i += 2)
             {
                 for (int j = 0; j < 8; j++)
                 {
@@ -128,7 +136,7 @@ namespace TetrisWinFormLED
                     //else System.Diagnostics.Debug.Write("0");
                 }
                 System.Diagnostics.Debug.WriteLine("");
-            }
+            }*/
         }
 
         private static int GetColor(Shape.Types objType)
@@ -167,6 +175,21 @@ namespace TetrisWinFormLED
             if (keyData == Keys.Right)
             {
                 m_objLastCommand = Game.Command.RIGHT;
+                return true;
+            }
+            if (keyData == Keys.F1)
+            {
+                m_objLastCommand = Game.Command.COUNTERCLOCKWISE;
+                return true;
+            }
+            if (keyData == Keys.F2)
+            {
+                m_objLastCommand = Game.Command.CLOCKWISE;
+                return true;
+            }
+            if (keyData == Keys.Down)
+            {
+                m_objLastCommand = Game.Command.DOWN;
                 return true;
             }
             return base.ProcessCmdKey(ref msg, keyData);

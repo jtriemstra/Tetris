@@ -98,7 +98,15 @@ namespace TetrisCommon
                     case Command.RIGHT:
                         m_objCurrentShape.MoveRight(Grid.LEFT_EDGE + Grid.WIDTH);
                         break;
-
+                    case Command.CLOCKWISE:
+                        m_objCurrentShape.RotateClockwise(Grid.LEFT_EDGE, Grid.LEFT_EDGE + Grid.WIDTH);
+                        break;
+                    case Command.COUNTERCLOCKWISE:
+                        m_objCurrentShape.RotateCounterclockwise();
+                        break;
+                    case Command.DOWN:
+                        m_objCurrentShape.MoveDown(Grid.HEIGHT - 1);
+                        break;
                 }
                 return objThisCommand != Command.NONE;
             }
@@ -113,7 +121,7 @@ namespace TetrisCommon
                 {
                     if (m_objGrid.ShapeCanDrop(m_objCurrentShape))
                     {
-                        m_objCurrentShape.MoveDown();
+                        m_objCurrentShape.MoveDown(Grid.HEIGHT - 1);
                         m_dtNextDrop = DateTime.Now.AddMilliseconds(m_intDropDelay);
                     }
                     else
@@ -136,6 +144,7 @@ namespace TetrisCommon
                 {
                     m_objCurrentState = State.CLEARING;
                     m_dtStopClearing = DateTime.Now.AddMilliseconds(1000);
+
                 }
                 else
                 {
@@ -156,10 +165,7 @@ namespace TetrisCommon
         {
             if (blnDoUpdate)
             {
-                if (m_objCurrentState == State.CLEARING)
-                {
-                }
-                else if (m_objCurrentState == State.SHAPE_LIVE)
+                if (m_objCurrentState == State.SHAPE_LIVE || m_objCurrentState == State.CLEARING)
                 {
                     m_fnRefreshDisplay(this.CurrentDisplay);
                 }

@@ -274,7 +274,9 @@ void loop() {
   while (intCommandRead < intBufferSize)
   {
     if (Serial.available() > 0){
-      bytCommand[intCommandRead++] = Serial.read();
+      bytCommand[intCommandRead] = Serial.read();
+      //Serial.write(bytCommand[intCommandRead]);
+      intCommandRead++;
     }
   }
 
@@ -299,9 +301,9 @@ void loop() {
   showTetris(bytDecodedColorSplits);
   //showTetrisRows(bytDecodedColorSplits, 5);
   //TODO: figure out why these fix the output
-    Serial.write(255);
-    Serial.write(255);
-  delay(100);
+    //Serial.write(255);
+    //Serial.write(255);
+  //delay(300);
 
   loopCount++;
   //show();

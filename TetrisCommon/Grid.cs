@@ -15,6 +15,8 @@ namespace TetrisCommon
         private Shape.Types[,] m_objStaticPoints = new Shape.Types[WIDTH,HEIGHT];
         private List<int> m_lstClearingRows = new List<int>();
 
+        public List<int> ClearingRows { get { return m_lstClearingRows; } }
+
         public Grid()
         {
             for(int x=0; x<WIDTH; x++){
