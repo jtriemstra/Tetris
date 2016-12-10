@@ -19,8 +19,13 @@ namespace TetrisConsoleLED
             m_objSerial = new SerialPort("COM4", 9600);
             m_objSerial.Open();
 
-            Game g = new Game(RefreshConsole);
+            Game g = new Game(RefreshConsole, ReceiveInput);
             g.play();
+        }
+
+        public static Game.Command ReceiveInput()
+        {
+            return Game.Command.NONE;
         }
 
         public static void RefreshConsole(Shape.Types[,] objPoints)
@@ -52,7 +57,7 @@ namespace TetrisConsoleLED
 
             //TODO: figure out why these fix the output
             Task t = ReadSerial();
-            t.Wait();
+            t.Wait(1000);
         }
 
         private static int GetColor(Shape.Types objType)

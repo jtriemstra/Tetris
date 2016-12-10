@@ -9,13 +9,15 @@ namespace TetrisCommon
     public class Game
     {
         public delegate void RefreshDisplay(Shape.Types[,] points);
+        public delegate Command ReceiveInput();
 
         private DateTime m_dtNextDrop;
         private Shape m_objCurrentShape;
         private Grid m_objGrid = new Grid();
         private State m_objCurrentState = State.IDLE;
-        private int m_intDropDelay = 2000;
+        private int m_intDropDelay = 1000;
         private RefreshDisplay m_fnRefreshDisplay;
+        private ReceiveInput m_fnReceiveInput;
         private DateTime m_dtStopClearing;
 
         public enum State
@@ -24,6 +26,16 @@ namespace TetrisCommon
             SHAPE_LIVE = 1,
             LOCKED = 2,
             CLEARING = 3
+        }
+
+        public enum Command
+        {
+            NONE = 0,
+            LEFT = 1,
+            RIGHT = 2,
+            CLOCKWISE = 3,
+            COUNTERCLOCKWISE = 4,
+            DOWN = 5
         }
 
         public Shape.Types[,] CurrentDisplay
@@ -38,9 +50,10 @@ namespace TetrisCommon
             }
         }
 
-        public Game(RefreshDisplay fnRefreshDisplay)
+        public Game(RefreshDisplay fnRefreshDisplay, ReceiveInput fnReceiveInput)
         {
             m_fnRefreshDisplay = fnRefreshDisplay;
+            m_fnReceiveInput = fnReceiveInput;
         }
 
         public void play()
@@ -61,8 +74,10 @@ namespace TetrisCommon
         {
             if (m_objCurrentState == State.IDLE)
             {
+                Random objRand = new Random();
+
                 m_objCurrentState = State.SHAPE_LIVE;
-                m_objCurrentShape = new Shape(Shape.Types.SQUARE);
+                m_objCurrentShape = new Shape((Shape.Types) objRand.Next(1,8));
                 m_objCurrentShape.Center();
                 return true;
             }
@@ -74,6 +89,18 @@ namespace TetrisCommon
         {
             if (m_objCurrentState == State.SHAPE_LIVE)
             {
+                Command objThisCommand = m_fnReceiveInput();
+                switch (objThisCommand)
+                {
+                    case Command.LEFT:
+                        m_objCurrentShape.MoveLeft(Grid.LEFT_EDGE);
+                        break;
+                    case Command.RIGHT:
+                        m_objCurrentShape.MoveRight(Grid.LEFT_EDGE + Grid.WIDTH);
+                        break;
+
+                }
+                return objThisCommand != Command.NONE;
             }
             return false;
         }

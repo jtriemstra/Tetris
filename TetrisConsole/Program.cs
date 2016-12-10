@@ -11,8 +11,13 @@ namespace TetrisConsole
     {
         static void Main(string[] args)
         {
-            Game g = new Game(RefreshConsole);
+            Game g = new Game(RefreshConsole, ReceiveInput);
             g.play();
+        }
+
+        public static Game.Command ReceiveInput()
+        {
+            return Game.Command.NONE;
         }
 
         public static void RefreshConsole(Shape.Types[,] objPoints)
