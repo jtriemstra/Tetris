@@ -105,7 +105,10 @@ namespace TetrisCommon
                         m_objCurrentShape.RotateCounterclockwise();
                         break;
                     case Command.DOWN:
-                        m_objCurrentShape.MoveDown(Grid.HEIGHT - 1);
+                        if (m_objGrid.ShapeCanDrop(m_objCurrentShape))
+                        {
+                            m_objCurrentShape.MoveDown(Grid.HEIGHT - 1);
+                        }
                         break;
                 }
                 return objThisCommand != Command.NONE;
@@ -155,6 +158,7 @@ namespace TetrisCommon
             {
                 if (DateTime.Now > m_dtStopClearing)
                 {
+                    m_objGrid.FinishClear();
                     m_dtStopClearing = DateTime.MaxValue;
                     m_objCurrentState = State.IDLE;
                 }

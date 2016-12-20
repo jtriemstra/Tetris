@@ -21,7 +21,8 @@ namespace TetrisCommon
             Z,
             SQUARE,
             L,
-            J
+            J,
+            CLEARING
         }
 
         public enum ClockwiseRotations
@@ -169,7 +170,7 @@ namespace TetrisCommon
             bool blnLegal = true;
             foreach (Point p in m_objPoints)
             {
-                if (p.X == intMaxRight) blnLegal = false;
+                if (p.X == intMaxRight - 1) blnLegal = false;
             }
             if (blnLegal)
             {
@@ -403,7 +404,7 @@ namespace TetrisCommon
                         m_objPoints[2].X -= 1;
                         m_objPoints[2].Y -= 1;
                         m_objPoints[0].X += 1; 
-                        m_objPoints[0].Y -= 1;
+                        m_objPoints[0].Y += 1;
                     }
                     else if (m_objCurrentRotation == ClockwiseRotations.TWOSEVENTY)
                     {
@@ -660,7 +661,7 @@ namespace TetrisCommon
                         m_objPoints[2].X += 1;
                         m_objPoints[2].Y += 1;
                         m_objPoints[0].X -= 1;
-                        m_objPoints[0].Y += 1;
+                        m_objPoints[0].Y -= 1;
 
                     }
                     else if (m_objCurrentRotation == ClockwiseRotations.NINETY)

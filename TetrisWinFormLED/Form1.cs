@@ -159,6 +159,8 @@ namespace TetrisWinFormLED
                     return 5;
                 case Shape.Types.Z:
                     return 6;
+                case Shape.Types.CLEARING:
+                    return 7;
             }
 
             return 0;

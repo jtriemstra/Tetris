@@ -139,17 +139,19 @@ void decodeTetrisColor(uint8_t color, uint8_t &red, uint8_t &green, uint8_t &blu
     case 0:
       red = 0;      green = 0;      blue = 0;      break;
      case 1:
-      red = 127;      green = 0;      blue = 0;      break;
+      red = 15;      green = 0;      blue = 0;      break;
      case 2:
-      red = 0;       green = 127;      blue = 0;      break;
+      red = 0;       green = 15;      blue = 0;      break;
      case 3:
-      red = 0;      green = 0;      blue = 127;      break;
+      red = 0;      green = 0;      blue = 15;      break;
      case 4:
-      red = 127;      green = 127;      blue = 0;      break;
+      red = 15;      green = 15;      blue = 0;      break;
      case 5:
-      red = 127;      green = 0;      blue = 127;      break;
+      red = 15;      green = 0;      blue = 15;      break;
      case 6:
-      red = 0;      green = 127;      blue = 127;      break;
+      red = 0;      green = 15;      blue = 15;      break;
+     case 7:
+      red = 15;      green = 15;      blue = 15;      break;
   }
 }
 
@@ -230,6 +232,7 @@ void uncompressTetrisRow(uint8_t compressedColors[], uint8_t uncompressedColors[
 void showTetris(byte output[]){
   cli();
   for (int i=0; i<2*24*TETRIS_LENGTH; i=i+2){
+    sendBitX8(output[i], output[i+1]);
     sendBitX8(output[i], output[i+1]);
   } 
   sei();

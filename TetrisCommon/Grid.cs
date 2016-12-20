@@ -43,15 +43,48 @@ namespace TetrisCommon
                 bool blnIsFull = true;
                 for (int column = LEFT_EDGE; column < LEFT_EDGE + WIDTH; column++)
                 {
-                    if (m_objStaticPoints[column,row] == null) blnIsFull = false;
+                    if (m_objStaticPoints[column,row] == Shape.Types.NULL) blnIsFull = false;
                 }
                 if (blnIsFull)
                 {
                     m_lstClearingRows.Add(row);
+                    for (int column = LEFT_EDGE; column < LEFT_EDGE + WIDTH; column++)
+                    {
+                        m_objStaticPoints[column, row] = Shape.Types.CLEARING;
+                    }
                 }
             }
 
             return m_lstClearingRows.Count > 0;
+        }
+
+        public void FinishClear()
+        {
+            int intRowsToDrop = 0;
+
+            for (int row = HEIGHT - 1; row >= 0; row--)
+            {
+                if (m_lstClearingRows.Contains(row))
+                {
+                    intRowsToDrop++;
+                }
+
+                if (row < intRowsToDrop){
+                    for (int column = LEFT_EDGE; column < LEFT_EDGE + WIDTH; column++)
+                    {
+                        m_objStaticPoints[column, row] = Shape.Types.NULL;
+                    }
+                }
+                else if (intRowsToDrop > 0 && !m_lstClearingRows.Contains(row))
+                {
+                    for (int column = LEFT_EDGE; column < LEFT_EDGE + WIDTH; column++)
+                    {
+                        m_objStaticPoints[column, row + intRowsToDrop] = m_objStaticPoints[column, row];
+                    }
+                }
+            }
+
+            m_lstClearingRows.Clear();
         }
 
         public bool ShapeCanDrop(Shape objShape)
