@@ -22,7 +22,7 @@
 #define T0H  400    // Width of a 0 bit in ns
 #define T0L  900    // Width of a 0 bit in ns
 
-#define RES 6000    // Width of the low gap between bits to cause a frame to latch
+#define RES 1000    // Width of the low gap between bits to cause a frame to latch
 
 // Here are some convience defines for using nanoseconds specs to generate actual CPU delays
 
@@ -65,7 +65,9 @@ static inline __attribute__ ((always_inline)) void sendBitX8( uint8_t bits, uint
       "out %[port2],__zero_reg__  \n\t"
       
       // Don't need an explicit delay here since the overhead that follows will always be long enough
-    
+      ".rept %[lowCycles] \n\t"               // Execute NOPs to delay exactly the specified number of cycles
+      "nop \n\t"
+      ".endr \n\t"
       ::
       [port1]    "I" (_SFR_IO_ADDR(PIXEL_PORT)),
       [port2]    "I" (_SFR_IO_ADDR(PIXEL_PORT2)),
@@ -75,8 +77,8 @@ static inline __attribute__ ((always_inline)) void sendBitX8( uint8_t bits, uint
       
       [T0HCycles]  "I" (NS_TO_CYCLES(T0H) - 3),           // 1-bit width less overhead  for the actual bit setting, note that this delay could be longer and everything would still work
       
-      [dataCycles]   "I" (NS_TO_CYCLES((T1H-T0H)) - 3)     // Minimum interbit delay. Note that we probably don't need this at all since the loop overhead will be enough, but here for correctness
-
+      [dataCycles]   "I" (NS_TO_CYCLES((T1H-T0H)) - 3),     // Minimum interbit delay. Note that we probably don't need this at all since the loop overhead will be enough, but here for correctness
+      [lowCycles]   "I" (NS_TO_CYCLES(RES) / 6)
     );
                                   
 
