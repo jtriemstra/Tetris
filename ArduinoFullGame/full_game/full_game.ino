@@ -303,17 +303,9 @@ void loop() {
 
      
   }
- 
-    
+     
   showTetris(bytDecodedColorSplits);
-  //showTetrisRows(bytDecodedColorSplits, 5);
-  //TODO: figure out why these fix the output
-    //Serial.write(255);
-    //Serial.write(255);
-  //delay(300);
 
   loopCount++;
-  //show();
-
-  
+ 
 }
