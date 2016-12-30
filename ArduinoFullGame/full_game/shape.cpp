@@ -1,5 +1,5 @@
 #include "shape_point.cpp"
-#include "enums.h"
+#include "shape_enums.h"
     
 class Shape
 {
@@ -14,10 +14,13 @@ class Shape
       ShapeEnums::Types Type() const { return m_objType; } 
       int InitialWidth() const {return 0;}
 
+    Shape(){
+      
+    }
+    
     Shape(ShapeEnums::Types objType)
     {
         m_objType = objType;
-        //for (int i=0; i<POINTS_PER_SHAPE; i++) m_objPoints.Points[i] = new Point();
         
         switch (m_objType)
         {
