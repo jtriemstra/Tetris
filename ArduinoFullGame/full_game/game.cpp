@@ -5,7 +5,7 @@
 class Game{
         private:
           unsigned long m_lngNextDrop;
-          Shape* m_objCurrentShape;
+          Shape m_objCurrentShape;
           Grid m_objGrid;
           GridEnums::State m_objCurrentState = GridEnums::IDLE;
           int m_intDropDelay = 1000000;
@@ -20,7 +20,7 @@ class Game{
           GridPoint objReturn = m_objGrid.StaticPoints();
           for (Point &p : m_objCurrentShape->Points().Points)
           {
-              objReturn.Points[p.X][p.Y] = m_objCurrentShape->Type();
+              objReturn.Points[p.X][p.Y] = m_objCurrentShape.Type();
           }
           return objReturn;
         }
@@ -66,13 +66,13 @@ class Game{
                 switch (objThisCommand)
                 {
                     case GridEnums::LEFT:
-                        m_objCurrentShape.MoveLeft(Grid.LEFT_EDGE);
+                        m_objCurrentShape.MoveLeft(m_objGrid.LEFT_EDGE);
                         break;
                     case GridEnums::RIGHT:
-                        m_objCurrentShape.MoveRight(Grid.LEFT_EDGE + Grid.WIDTH);
+                        m_objCurrentShape.MoveRight(m_objGrid.LEFT_EDGE + m_objGrid.WIDTH);
                         break;
                     case GridEnums::CLOCKWISE:
-                        m_objCurrentShape.RotateClockwise(Grid.LEFT_EDGE, Grid.LEFT_EDGE + Grid.WIDTH);
+                        m_objCurrentShape.RotateClockwise(m_objGrid.LEFT_EDGE, m_objGrid.LEFT_EDGE + m_objGrid.WIDTH);
                         break;
                     case GridEnums::COUNTERCLOCKWISE:
                         m_objCurrentShape.RotateCounterclockwise();
@@ -80,7 +80,7 @@ class Game{
                     case GridEnums::DOWN:
                         if (m_objGrid.ShapeCanDrop(m_objCurrentShape))
                         {
-                            m_objCurrentShape.MoveDown(Grid.HEIGHT - 1);
+                            m_objCurrentShape.MoveDown(m_objGrid.HEIGHT - 1);
                         }
                         break;
                 }
@@ -97,7 +97,7 @@ class Game{
                 {
                     if (m_objGrid.ShapeCanDrop(m_objCurrentShape))
                     {
-                        m_objCurrentShape.MoveDown(Grid.HEIGHT - 1);
+                        m_objCurrentShape.MoveDown(m_objGrid.HEIGHT - 1);
                         m_lngNextDrop = micros() + m_intDropDelay;
                     }
                     else
