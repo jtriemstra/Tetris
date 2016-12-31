@@ -51,7 +51,7 @@ class Game{
             {
                 m_objCurrentState = GridEnums::SHAPE_LIVE;
                 m_objCurrentShape = new Shape(static_cast<ShapeEnums::Types>((int)random(1,8)));
-                m_objCurrentShape.Center();
+                m_objCurrentShape->Center();
                 return true;
             }
 
@@ -66,21 +66,21 @@ class Game{
                 switch (objThisCommand)
                 {
                     case GridEnums::LEFT:
-                        m_objCurrentShape.MoveLeft(Grid.LEFT_EDGE);
+                        m_objCurrentShape->MoveLeft(m_objGrid.LEFT_EDGE);
                         break;
                     case GridEnums::RIGHT:
-                        m_objCurrentShape.MoveRight(Grid.LEFT_EDGE + Grid.WIDTH);
+                        m_objCurrentShape->MoveRight(m_objGrid.LEFT_EDGE + m_objGrid.WIDTH);
                         break;
                     case GridEnums::CLOCKWISE:
-                        m_objCurrentShape.RotateClockwise(Grid.LEFT_EDGE, Grid.LEFT_EDGE + Grid.WIDTH);
+                        m_objCurrentShape->RotateClockwise(m_objGrid.LEFT_EDGE, m_objGrid.LEFT_EDGE + m_objGrid.WIDTH);
                         break;
                     case GridEnums::COUNTERCLOCKWISE:
-                        m_objCurrentShape.RotateCounterclockwise();
+                        m_objCurrentShape->RotateCounterclockwise();
                         break;
                     case GridEnums::DOWN:
                         if (m_objGrid.ShapeCanDrop(m_objCurrentShape))
                         {
-                            m_objCurrentShape.MoveDown(Grid.HEIGHT - 1);
+                            m_objCurrentShape->MoveDown(m_objGrid.HEIGHT - 1);
                         }
                         break;
                 }
@@ -97,12 +97,13 @@ class Game{
                 {
                     if (m_objGrid.ShapeCanDrop(m_objCurrentShape))
                     {
-                        m_objCurrentShape.MoveDown(Grid.HEIGHT - 1);
+                        m_objCurrentShape->MoveDown(m_objGrid.HEIGHT - 1);
                         m_lngNextDrop = micros() + m_intDropDelay;
                     }
                     else
                     {
                         m_objGrid.LockShape(m_objCurrentShape);
+                        delete m_objCurrentShape;
                         m_objCurrentState = GridEnums::LOCKED;            
                     }
                     return true;
@@ -116,7 +117,7 @@ class Game{
         {
             if (m_objCurrentState == GridEnums::LOCKED)
             {
-                if (m_objGrid.TryClear(m_objCurrentShape.BottomRow()))
+                if (m_objGrid.TryClear(m_objCurrentShape->BottomRow()))
                 {
                     m_objCurrentState = GridEnums::CLEARING;
                     m_lngStopClearing = micros() + 1000000);

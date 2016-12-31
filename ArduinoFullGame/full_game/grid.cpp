@@ -3,9 +3,6 @@
 
 class Grid{
   private:
-    static const int WIDTH = 10;
-    static const int HEIGHT = 20;
-    static const int LEFT_EDGE = 0;
     static const int MAX_CLEARED_ROWS = 4;
     GridPoint m_objStaticPoints;
     int m_lstClearingRows[MAX_CLEARED_ROWS];
@@ -21,6 +18,9 @@ class Grid{
     }
 
   public:
+    static const int WIDTH = 10;
+    static const int HEIGHT = 20;
+    static const int LEFT_EDGE = 0;
     int* ClearingRows() const { return m_lstClearingRows;  }
     GridPoint StaticPoints() const {  return m_objStaticPoints; } 
     
