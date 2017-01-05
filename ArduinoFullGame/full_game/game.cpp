@@ -120,7 +120,7 @@ class Game{
                 if (m_objGrid.TryClear(m_objCurrentShape->BottomRow()))
                 {
                     m_objCurrentState = GridEnums::CLEARING;
-                    m_lngStopClearing = micros() + 1000000);
+                    m_lngStopClearing = micros() + 1000000;
 
                 }
                 else
@@ -145,7 +145,7 @@ class Game{
             {
                 if (m_objCurrentState == GridEnums::SHAPE_LIVE || m_objCurrentState == GridEnums::CLEARING)
                 {
-                    m_fnRefreshDisplay(this.CurrentDisplay);
+                    m_fnRefreshDisplay(this->CurrentDisplay());
                 }
             }
         }

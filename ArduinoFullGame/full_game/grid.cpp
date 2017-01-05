@@ -33,11 +33,11 @@ class Grid{
         }
     }
 
-    void LockShape(const Shape &objShape)
+    void LockShape(const Shape* objShape)
     {
-        for (Point& p : objShape.Points().Points)
+        for (Point& p : objShape->Points().Points)
         {
-            m_objStaticPoints.Points[p.X][p.Y] = objShape.Type();
+            m_objStaticPoints.Points[p.X][p.Y] = objShape->Type();
         }
     }
 
@@ -93,12 +93,12 @@ class Grid{
         m_intActualClearingRows = 0;
     }
 
-    bool ShapeCanDrop(const Shape& objShape) const
+    bool ShapeCanDrop(const Shape* objShape) const
     {
-        if (objShape.BottomRow() == HEIGHT - 1) return false;
+        if (objShape->BottomRow() == HEIGHT - 1) return false;
   
         bool blnReturn = true;
-        for (Point p : objShape.Points().Points)
+        for (Point p : objShape->Points().Points)
         {
             ShapeEnums::Types objTest = m_objStaticPoints.Points[p.X][p.Y + 1];
             if (objTest != ShapeEnums::NULL) blnReturn = false;
