@@ -40,7 +40,7 @@ class Game{
             while (true)
             {
                 blnUpdateDisplay = false;
-                /*blnUpdateDisplay = blnUpdateDisplay || tryGenerate();
+                blnUpdateDisplay = blnUpdateDisplay || tryGenerate();
                 /*blnUpdateDisplay = blnUpdateDisplay || receiveInput();
                 blnUpdateDisplay = blnUpdateDisplay || tryDrop();
                 tryClear();*/
