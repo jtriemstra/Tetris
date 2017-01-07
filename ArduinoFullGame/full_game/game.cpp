@@ -49,10 +49,10 @@ class Game{
         {
             if (m_objCurrentState == GridEnums::IDLE)
             {
-                /*m_objCurrentState = GridEnums::SHAPE_LIVE;
+                m_objCurrentState = GridEnums::SHAPE_LIVE;
                 m_objCurrentShape = new Shape(static_cast<ShapeEnums::Types>((int)random(1,8)));
                 m_objCurrentShape->Center();
-                return true;*/
+                return true;
             }
 
             return false;
