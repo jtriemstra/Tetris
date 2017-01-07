@@ -62,7 +62,7 @@ class Game{
         {
             if (m_objCurrentState == GridEnums::SHAPE_LIVE)
             {
-                /*GridEnums::Command objThisCommand = m_fnReceiveInput();
+                GridEnums::Command objThisCommand = m_fnReceiveInput();
                 switch (objThisCommand)
                 {
                     case GridEnums::LEFT:
@@ -84,7 +84,7 @@ class Game{
                         }
                         break;
                 }
-                return objThisCommand != GridEnums::NONE;*/
+                return objThisCommand != GridEnums::NONE;
             }
             return false;
         }
