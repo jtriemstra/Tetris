@@ -28,7 +28,7 @@ class Grid{
     {
         for(int x=0; x<WIDTH; x++){
             for(int y=0; y<HEIGHT; y++){
-                m_objStaticPoints.Points[x][y] = ShapeEnums::NULL;
+                m_objStaticPoints.Points[x][y] = ShapeEnums::NONE;
             }
         }
     }
@@ -49,7 +49,7 @@ class Grid{
             bool blnIsFull = true;
             for (int column = LEFT_EDGE; column < LEFT_EDGE + WIDTH; column++)
             {
-                if (m_objStaticPoints.Points[column][row] == ShapeEnums::NULL) blnIsFull = false;
+                if (m_objStaticPoints.Points[column][row] == ShapeEnums::NONE) blnIsFull = false;
             }
             if (blnIsFull)
             {
@@ -78,7 +78,7 @@ class Grid{
             if (row < intRowsToDrop){
                 for (int column = LEFT_EDGE; column < LEFT_EDGE + WIDTH; column++)
                 {
-                    m_objStaticPoints.Points[column][row] = ShapeEnums::NULL;
+                    m_objStaticPoints.Points[column][row] = ShapeEnums::NONE;
                 }
             }
             else if (intRowsToDrop > 0 && !ShouldClearThisRow(row))
@@ -101,7 +101,7 @@ class Grid{
         for (Point p : objShape->Points().Points)
         {
             ShapeEnums::Types objTest = m_objStaticPoints.Points[p.X][p.Y + 1];
-            if (objTest != ShapeEnums::NULL) blnReturn = false;
+            if (objTest != ShapeEnums::NONE) blnReturn = false;
         }
         return blnReturn;
     }  

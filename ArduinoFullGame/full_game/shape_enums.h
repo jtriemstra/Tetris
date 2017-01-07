@@ -4,7 +4,7 @@
 namespace ShapeEnums{
   enum Types
   {
-      NULL,
+      NONE,
       I,
       T,
       S,

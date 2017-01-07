@@ -1,3 +1,4 @@
+#include "game.cpp"
 // Credit: https://wp.josh.com/2014/05/13/ws2812-neopixels-are-not-so-finicky-once-you-get-to-know-them/
 // These values depend on which pins your 8 strings are connected to and what board you are using 
 // More info on how to find these at http://www.arduino.cc/en/Reference/PortManipulation
@@ -139,6 +140,7 @@ void decodeTetrisColor(uint8_t color, uint8_t &red, uint8_t &green, uint8_t &blu
     case 0:
       red = 0;      green = 0;      blue = 0;      break;
      case 1:
+     case 5:
       red = 15;      green = 0;      blue = 0;      break;
      case 2:
       red = 0;       green = 15;      blue = 0;      break;
@@ -146,11 +148,11 @@ void decodeTetrisColor(uint8_t color, uint8_t &red, uint8_t &green, uint8_t &blu
       red = 0;      green = 0;      blue = 15;      break;
      case 4:
       red = 15;      green = 15;      blue = 0;      break;
-     case 5:
-      red = 15;      green = 0;      blue = 15;      break;
      case 6:
-      red = 0;      green = 15;      blue = 15;      break;
+      red = 15;      green = 0;      blue = 15;      break;
      case 7:
+      red = 0;      green = 15;      blue = 15;      break;
+     case 8:
       red = 15;      green = 15;      blue = 15;      break;
   }
 }
@@ -258,6 +260,7 @@ void showTetrisRows(byte output[], int rowCount){
 int loopCount = 0;
 bool blnIncrement = true;
 bool blnRunning = false;
+Game* m_objGame;
 
 void setup() {
   PIXEL_DDR = 0xff;    // Set all row pins to output
@@ -266,12 +269,47 @@ void setup() {
   clearAll();
   delay(500);
 
-  Serial.begin(9600);
+  m_objGame = new Game(doRefreshDisplay, doReceiveInput);  
+
+  sendRedRow(255);
+  delay(500);
+  clearAll();
+  delay(500);
 }
 
+void doRefreshDisplay(GridPoint objCurrentDisplay)
+{
+  //uint8_t compressedColors[TETRIS_WIDTH / 2];
+  uint8_t uncompressedColors[TETRIS_WIDTH];
+  byte bytDecodedColorSplits[2 * 24 * TETRIS_LENGTH];
+  
+  //for (int j=0; j<TETRIS_WIDTH / 2; j++) compressedColors[j] = 0;
+  for (int j=0; j<TETRIS_WIDTH; j++) uncompressedColors[j] = 0;
+  
+  for (int i=0; i<TETRIS_LENGTH; i++){
+  
+    for (int j=0; j<(TETRIS_WIDTH); j++){
+      //compressedColors[j] = bytCommand[i*(TETRIS_WIDTH / 2) + j];
+      uncompressedColors[j] = m_objGame->CurrentDisplay().Points[j][i];
+    }
+    //uncompressTetrisRow(compressedColors, uncompressedColors);
+         
+    makeTetrisRow(uncompressedColors, bytDecodedColorSplits, i);      
+  }
+     
+  showTetris(bytDecodedColorSplits);
+}
 
+GridEnums::Command doReceiveInput()
+{
+  return GridEnums::NONE;
+}
 
 void loop() {
+sendBlueRow(255);
+  delay(500);
+  m_objGame->play();
+  /*
   int intCommandRead = 0;
   int intBufferSize = TETRIS_LENGTH * (TETRIS_WIDTH / 2);
   byte bytCommand[intBufferSize];
@@ -305,7 +343,7 @@ void loop() {
   }
      
   showTetris(bytDecodedColorSplits);
-
+  */
   loopCount++;
  
 }
