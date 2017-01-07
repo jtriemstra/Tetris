@@ -232,7 +232,7 @@ void uncompressTetrisRow(uint8_t compressedColors[], uint8_t uncompressedColors[
 }
 
 void showTetris(byte output[]){
-  /*
+  
   cli();
   
   for (int j=0; j<TETRIS_LENGTH; j++){
@@ -244,7 +244,7 @@ void showTetris(byte output[]){
     } 
   }
   
-  sei();*/
+  sei();
   show();
   
 }
