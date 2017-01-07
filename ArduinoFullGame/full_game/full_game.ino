@@ -279,6 +279,7 @@ void setup() {
 
 void doRefreshDisplay(GridPoint objCurrentDisplay)
 {
+  
   //uint8_t compressedColors[TETRIS_WIDTH / 2];
   uint8_t uncompressedColors[TETRIS_WIDTH];
   byte bytDecodedColorSplits[2 * 24 * TETRIS_LENGTH];
@@ -296,8 +297,9 @@ void doRefreshDisplay(GridPoint objCurrentDisplay)
          
     makeTetrisRow(uncompressedColors, bytDecodedColorSplits, i);      
   }
-     
+  /*
   showTetris(bytDecodedColorSplits);
+  */
 }
 
 GridEnums::Command doReceiveInput()
