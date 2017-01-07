@@ -49,10 +49,10 @@ class Game{
         {
             if (m_objCurrentState == GridEnums::IDLE)
             {
-                m_objCurrentState = GridEnums::SHAPE_LIVE;
+                /*m_objCurrentState = GridEnums::SHAPE_LIVE;
                 m_objCurrentShape = new Shape(static_cast<ShapeEnums::Types>((int)random(1,8)));
                 m_objCurrentShape->Center();
-                return true;
+                return true;*/
             }
 
             return false;
@@ -62,7 +62,7 @@ class Game{
         {
             if (m_objCurrentState == GridEnums::SHAPE_LIVE)
             {
-                GridEnums::Command objThisCommand = m_fnReceiveInput();
+                /*GridEnums::Command objThisCommand = m_fnReceiveInput();
                 switch (objThisCommand)
                 {
                     case GridEnums::LEFT:
@@ -84,7 +84,7 @@ class Game{
                         }
                         break;
                 }
-                return objThisCommand != GridEnums::NONE;
+                return objThisCommand != GridEnums::NONE;*/
             }
             return false;
         }
@@ -93,7 +93,7 @@ class Game{
         {
             if (m_objCurrentState == GridEnums::SHAPE_LIVE)
             {
-                if (micros() >= m_lngNextDrop)
+                /*if (micros() >= m_lngNextDrop)
                 {
                     if (m_objGrid.ShapeCanDrop(m_objCurrentShape))
                     {
@@ -107,7 +107,7 @@ class Game{
                         m_objCurrentState = GridEnums::LOCKED;            
                     }
                     return true;
-                }
+                }*/
             }
 
             return false;
@@ -115,7 +115,7 @@ class Game{
 
         void tryClear()
         {
-            if (m_objCurrentState == GridEnums::LOCKED)
+            /*if (m_objCurrentState == GridEnums::LOCKED)
             {
                 if (m_objGrid.TryClear(m_objCurrentShape->BottomRow()))
                 {
@@ -136,18 +136,18 @@ class Game{
                     m_lngStopClearing = 60 * 60 * 1000 * 1000;
                     m_objCurrentState = GridEnums::IDLE;
                 }
-            }
+            }*/
         }
 
         void refreshDisplay(bool blnDoUpdate)
         {
-            if (blnDoUpdate)
+            /*if (blnDoUpdate)
             {
                 if (m_objCurrentState == GridEnums::SHAPE_LIVE || m_objCurrentState == GridEnums::CLEARING)
                 {
                     m_fnRefreshDisplay(this->CurrentDisplay());
                 }
-            }
+            }*/
         }
 };
 
