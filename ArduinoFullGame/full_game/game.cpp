@@ -18,9 +18,12 @@ class Game{
         GridPoint CurrentDisplay() const
         {
           GridPoint objReturn = m_objGrid.StaticPoints();
-          for (Point &p : m_objCurrentShape->Points().Points)
+          if (m_objCurrentShape != NULL)
           {
-              objReturn.Points[p.X][p.Y] = m_objCurrentShape->Type();
+            for (Point &p : m_objCurrentShape->Points().Points)
+            {
+                objReturn.Points[p.X][p.Y] = m_objCurrentShape->Type();
+            }
           }
           return objReturn;
         }
@@ -37,10 +40,10 @@ class Game{
             while (true)
             {
                 blnUpdateDisplay = false;
-                blnUpdateDisplay = blnUpdateDisplay || tryGenerate();
-                blnUpdateDisplay = blnUpdateDisplay || receiveInput();
+                /*blnUpdateDisplay = blnUpdateDisplay || tryGenerate();
+                /*blnUpdateDisplay = blnUpdateDisplay || receiveInput();
                 blnUpdateDisplay = blnUpdateDisplay || tryDrop();
-                tryClear();
+                tryClear();*/
                 refreshDisplay(blnUpdateDisplay);
             }
         }
@@ -50,8 +53,8 @@ class Game{
             if (m_objCurrentState == GridEnums::IDLE)
             {
                 m_objCurrentState = GridEnums::SHAPE_LIVE;
-                m_objCurrentShape = new Shape(static_cast<ShapeEnums::Types>((int)random(1,8)));
-                m_objCurrentShape->Center();
+                //m_objCurrentShape = new Shape(static_cast<ShapeEnums::Types>((int)random(1,8)));
+                //m_objCurrentShape->Center();
                 return true;
             }
 

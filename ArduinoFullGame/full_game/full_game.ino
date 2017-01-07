@@ -232,7 +232,9 @@ void uncompressTetrisRow(uint8_t compressedColors[], uint8_t uncompressedColors[
 }
 
 void showTetris(byte output[]){
+  /*
   cli();
+  
   for (int j=0; j<TETRIS_LENGTH; j++){
     for (int i=0; i<2*24; i=i+2){
       sendBitX8(output[j*2*24 + i], output[j*2*24 + i+1]);
@@ -241,8 +243,10 @@ void showTetris(byte output[]){
       sendBitX8(output[j*2*24 + i], output[j*2*24 + i+1]);
     } 
   }
-  sei();
+  
+  sei();*/
   show();
+  
 }
 
 void showTetrisRow(byte output[], int rowIndex){
@@ -275,6 +279,8 @@ void setup() {
   delay(500);
   clearAll();
   delay(500);
+
+  Serial.begin(9600);
 }
 
 void doRefreshDisplay(GridPoint objCurrentDisplay)
@@ -297,9 +303,9 @@ void doRefreshDisplay(GridPoint objCurrentDisplay)
          
     makeTetrisRow(uncompressedColors, bytDecodedColorSplits, i);      
   }
-  /*
+  
   showTetris(bytDecodedColorSplits);
-  */
+  
 }
 
 GridEnums::Command doReceiveInput()
@@ -308,7 +314,7 @@ GridEnums::Command doReceiveInput()
 }
 
 void loop() {
-sendBlueRow(255);
+  sendBlueRow(255);
   delay(500);
   m_objGame->play();
   /*
