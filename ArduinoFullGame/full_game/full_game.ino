@@ -283,7 +283,7 @@ void setup() {
   Serial.begin(9600);
 }
 
-void doRefreshDisplay(GridPoint objCurrentDisplay)
+void doRefreshDisplay()
 {
   
   //uint8_t compressedColors[TETRIS_WIDTH / 2];

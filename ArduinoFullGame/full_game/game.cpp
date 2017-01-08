@@ -9,7 +9,7 @@ class Game{
           Grid m_objGrid;
           GridEnums::State m_objCurrentState = GridEnums::IDLE;
           int m_intDropDelay = 1000000;
-          void (*m_fnRefreshDisplay)(GridPoint);
+          void (*m_fnRefreshDisplay)();
           GridEnums::Command (*m_fnReceiveInput)();
           unsigned long m_lngStopClearing;
           
@@ -28,7 +28,7 @@ class Game{
           return objReturn;
         }
 
-        Game(void (*fnRefreshDisplay)(GridPoint), GridEnums::Command(*fnReceiveInput)())
+        Game(void (*fnRefreshDisplay)(), GridEnums::Command(*fnReceiveInput)())
         {
             m_fnRefreshDisplay = fnRefreshDisplay;
             m_fnReceiveInput = fnReceiveInput;
@@ -37,8 +37,10 @@ class Game{
         void play()
         {
             bool blnUpdateDisplay;
+            int loopCount=0;
             while (true)
             {
+                Serial.write(loopCount++);
                 blnUpdateDisplay = false;
                 blnUpdateDisplay = blnUpdateDisplay || tryGenerate();
                 /*blnUpdateDisplay = blnUpdateDisplay || receiveInput();
@@ -149,7 +151,7 @@ class Game{
             {
                 if (m_objCurrentState == GridEnums::SHAPE_LIVE || m_objCurrentState == GridEnums::CLEARING)
                 {
-                    m_fnRefreshDisplay(this->CurrentDisplay());
+                    m_fnRefreshDisplay();
                 }
             }
         }
