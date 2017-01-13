@@ -23,6 +23,11 @@ class Grid{
     static const int LEFT_EDGE = 0;
     int* ClearingRows() const { return m_lstClearingRows;  }
     GridPoint StaticPoints() const {  return m_objStaticPoints; } 
+
+    int StaticPoint(int intColumn, int intRow)
+    {
+      return m_objStaticPoints.Points[intColumn][intRow];
+    }
     
     Grid()
     {

@@ -28,6 +28,15 @@ class Game{
           return objReturn;
         }
 
+        int CurrentDisplay(int intColumn, int intRow)
+        {
+          for (Point &p : m_objCurrentShape->Points().Points)
+            {
+                if (p.X == intColumn && p.Y == intRow) return (int) m_objCurrentShape->Type();                
+            }
+          return m_objGrid.StaticPoint(intColumn, intRow);
+        }
+
         Game(void (*fnRefreshDisplay)(), GridEnums::Command(*fnReceiveInput)())
         {
             m_fnRefreshDisplay = fnRefreshDisplay;
@@ -40,12 +49,11 @@ class Game{
             int loopCount=0;
             while (true)
             {
-                Serial.write(loopCount++);
                 blnUpdateDisplay = false;
                 blnUpdateDisplay = blnUpdateDisplay || tryGenerate();
-                /*blnUpdateDisplay = blnUpdateDisplay || receiveInput();
+                //blnUpdateDisplay = blnUpdateDisplay || receiveInput();
                 blnUpdateDisplay = blnUpdateDisplay || tryDrop();
-                tryClear();*/
+                //tryClear();
                 refreshDisplay(blnUpdateDisplay);
             }
         }
@@ -55,9 +63,8 @@ class Game{
             if (m_objCurrentState == GridEnums::IDLE)
             {
                 m_objCurrentState = GridEnums::SHAPE_LIVE;
-                //m_objCurrentShape = new Shape(static_cast<ShapeEnums::Types>((int)random(1,8)));
-                m_objCurrentShape = new Shape(ShapeEnums::SQUARE);
-                //m_objCurrentShape->Center();
+                m_objCurrentShape = new Shape(static_cast<ShapeEnums::Types>((int)random(1,8)));
+                m_objCurrentShape->Center();
                 return true;
             }
 

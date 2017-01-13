@@ -297,7 +297,7 @@ void doRefreshDisplay()
   
     for (int j=0; j<(TETRIS_WIDTH); j++){
       //compressedColors[j] = bytCommand[i*(TETRIS_WIDTH / 2) + j];
-      uncompressedColors[j] = m_objGame->CurrentDisplay().Points[j][i];
+      uncompressedColors[j] = m_objGame->CurrentDisplay(j,i);
     }
     //uncompressTetrisRow(compressedColors, uncompressedColors);
          
