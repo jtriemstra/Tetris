@@ -4,11 +4,11 @@
  
 class Game{
         private:
-          unsigned long m_lngNextDrop;
+          unsigned long m_lngNextDrop = 0;
           Shape* m_objCurrentShape;
           Grid m_objGrid;
           GridEnums::State m_objCurrentState = GridEnums::IDLE;
-          int m_intDropDelay = 1000000;
+          unsigned long m_lngDropDelay = 1000000;
           void (*m_fnRefreshDisplay)();
           GridEnums::Command (*m_fnReceiveInput)();
           unsigned long m_lngStopClearing;
@@ -51,9 +51,9 @@ class Game{
             {
                 blnUpdateDisplay = false;
                 blnUpdateDisplay = blnUpdateDisplay || tryGenerate();
-                //blnUpdateDisplay = blnUpdateDisplay || receiveInput();
+                blnUpdateDisplay = blnUpdateDisplay || receiveInput();
                 blnUpdateDisplay = blnUpdateDisplay || tryDrop();
-                //tryClear();
+                tryClear();
                 refreshDisplay(blnUpdateDisplay);
             }
         }
@@ -111,7 +111,8 @@ class Game{
                     if (m_objGrid.ShapeCanDrop(m_objCurrentShape))
                     {
                         m_objCurrentShape->MoveDown(m_objGrid.HEIGHT - 1);
-                        m_lngNextDrop = micros() + m_intDropDelay;
+                        m_lngNextDrop = micros() + m_lngDropDelay;
+                        
                     }
                     else
                     {
