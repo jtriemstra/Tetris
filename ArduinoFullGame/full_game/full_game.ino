@@ -39,6 +39,10 @@ const int TETRIS_LENGTH = 20;
 const int TETRIS_WIDTH = 10;
 const int STRING_LENGTH = 40;
 
+const byte PIN_LATCH = 13;
+const byte PIN_CLOCK = 12;
+const byte PIN_DATA = 2; 
+
 // Actually send the next set of 8 WS2812B encoded bits to the 8 pins.
 // We must to drop to asm to enusre that the complier does
 // not reorder things and make it so the delay happens in the wrong place.
@@ -261,6 +265,40 @@ void showTetrisRows(byte output[], int rowCount){
   } 
 }
 
+//credit: https://github.com/joshmarinacci/nespad-arduino/blob/master/NESpad.cpp
+byte readNES()
+{
+  byte ret = 0;
+  byte i;
+  doLatch();
+  for (i = 0; i < 8; i++) {
+    ret |= (doButtonRead(i == 7) << i);
+    //Serial.print(ret);
+  }
+  return ~ret;
+}
+
+void doLatch()
+{
+  digitalWrite(PIN_LATCH,HIGH);
+  delayMicroseconds(60);
+  digitalWrite(PIN_LATCH,LOW);
+}
+
+byte doButtonRead(bool last)
+{
+  byte ret = digitalRead(PIN_DATA);
+  if (!last)
+  {
+  delayMicroseconds(12);
+  digitalWrite(PIN_CLOCK,HIGH);
+  delayMicroseconds(12);
+  digitalWrite(PIN_CLOCK,LOW);
+  }
+  return ret;
+}
+
+
 int loopCount = 0;
 bool blnIncrement = true;
 bool blnRunning = false;
@@ -269,6 +307,11 @@ Game* m_objGame;
 void setup() {
   PIXEL_DDR = 0xff;    // Set all row pins to output
   PIXEL_DDR2 = 0xff;    // Set all row pins to output
+
+  
+  pinMode(PIN_LATCH, OUTPUT);
+  pinMode(PIN_CLOCK,  OUTPUT);
+  pinMode(PIN_DATA, INPUT);
   
   clearAll();
   delay(500);
@@ -310,6 +353,30 @@ void doRefreshDisplay()
 
 GridEnums::Command doReceiveInput()
 {
+  
+  delay(50);
+  byte bytButton = readNES();
+  delay(50);
+  Serial.print(bytButton);
+  Serial.write("\n");
+  switch(bytButton)
+  {
+    case 1:
+    return GridEnums::CLOCKWISE;
+    break;
+    case 2:
+    return GridEnums::COUNTERCLOCKWISE;
+    break;
+    case 32:
+    return GridEnums::DOWN;
+    break;
+    case 64:
+    return GridEnums::LEFT;
+    break;
+    case 128:
+    return GridEnums::RIGHT;
+    break;
+  }
   return GridEnums::NONE;
 }
 
@@ -317,41 +384,7 @@ void loop() {
   sendBlueRow(255);
   delay(500);
   m_objGame->play();
-  /*
-  int intCommandRead = 0;
-  int intBufferSize = TETRIS_LENGTH * (TETRIS_WIDTH / 2);
-  byte bytCommand[intBufferSize];
-  byte bytDecodedColorSplits[2 * 24 * TETRIS_LENGTH];
-  for (int i=0; i<2 * 24 * TETRIS_LENGTH; i++) bytDecodedColorSplits[i] = 0;
   
-  while (intCommandRead < intBufferSize)
-  {
-    if (Serial.available() > 0){
-      bytCommand[intCommandRead] = Serial.read();
-      //Serial.write(bytCommand[intCommandRead]);
-      intCommandRead++;
-    }
-  }
-
-  uint8_t compressedColors[TETRIS_WIDTH / 2];
-  uint8_t uncompressedColors[TETRIS_WIDTH];
-  for (int j=0; j<TETRIS_WIDTH / 2; j++) compressedColors[j] = 0;
-  for (int j=0; j<TETRIS_WIDTH; j++) uncompressedColors[j] = 0;
-  
-  for (int i=0; i<TETRIS_LENGTH; i++){
-  
-    for (int j=0; j<(TETRIS_WIDTH / 2); j++){
-      compressedColors[j] = bytCommand[i*(TETRIS_WIDTH / 2) + j];
-    }
-    uncompressTetrisRow(compressedColors, uncompressedColors);
-         
-    makeTetrisRow(uncompressedColors, bytDecodedColorSplits, i); 
-
-     
-  }
-     
-  showTetris(bytDecodedColorSplits);
-  */
   loopCount++;
  
 }
