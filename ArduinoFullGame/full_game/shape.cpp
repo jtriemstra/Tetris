@@ -7,7 +7,7 @@ class Shape
       static const int POINTS_PER_SHAPE = 4;
       ShapeEnums::Types m_objType;
       ShapePoint m_objPoints;// = new Point[4]{ new Point(), new Point(), new Point(), new Point()};
-      ShapeEnums::ClockwiseRotations m_objCurrentRotation;
+      ShapeEnums::ClockwiseRotations m_objCurrentRotation = ShapeEnums::INITIAL;
             
     public:
       ShapePoint Points() const { return m_objPoints; } 

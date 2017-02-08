@@ -353,10 +353,8 @@ void doRefreshDisplay()
 
 GridEnums::Command doReceiveInput()
 {
-  
-  delay(50);
   byte bytButton = readNES();
-  delay(50);
+  delay(150);
   Serial.print(bytButton);
   Serial.write("\n");
   switch(bytButton)
