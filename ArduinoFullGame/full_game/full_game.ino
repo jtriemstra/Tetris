@@ -1,4 +1,5 @@
 #include "game.cpp"
+
 // Credit: https://wp.josh.com/2014/05/13/ws2812-neopixels-are-not-so-finicky-once-you-get-to-know-them/
 // These values depend on which pins your 8 strings are connected to and what board you are using 
 // More info on how to find these at http://www.arduino.cc/en/Reference/PortManipulation
@@ -35,13 +36,18 @@
 
 #define NS_TO_CYCLES(n) ( (n) / NS_PER_CYCLE )
 
-const int TETRIS_LENGTH = 20;
-const int TETRIS_WIDTH = 10;
-const int STRING_LENGTH = 40;
+const byte TETRIS_LENGTH = 20;
+const byte TETRIS_WIDTH = 10;
+const byte STRING_LENGTH = 40;
 
 const byte PIN_LATCH = 13;
 const byte PIN_CLOCK = 12;
 const byte PIN_DATA = 2; 
+
+const uint8_t BYTES_PER_ROW = 2;
+const uint8_t BITS_PER_COLOR = 24;
+
+Game* m_objGame;
 
 // Actually send the next set of 8 WS2812B encoded bits to the 8 pins.
 // We must to drop to asm to enusre that the complier does
@@ -88,9 +94,6 @@ static inline __attribute__ ((always_inline)) void sendBitX8( uint8_t bits, uint
     // Note that the inter-bit gap can be as long as you want as long as it doesn't exceed the reset timeout (which is A long time)
     
 }  
-
-
-// Each string is one bit in "row" represening on or off
 
 static inline void __attribute__ ((always_inline)) sendWhiteRow( uint8_t row ) {
   uint8_t bit=24;       
@@ -142,31 +145,36 @@ void clearAll(){
 void decodeTetrisColor(uint8_t color, uint8_t &red, uint8_t &green, uint8_t &blue){
   switch(color){
     case 0:
-      red = 0;      green = 0;      blue = 0;      break;
+      red = 0;       green = 0;       blue = 0;       break;
      case 1:
      case 5:
-      red = 15;      green = 0;      blue = 0;      break;
+      red = 15;      green = 0;       blue = 0;       break;
      case 2:
-      red = 0;       green = 15;      blue = 0;      break;
+      red = 0;       green = 15;      blue = 0;       break;
      case 3:
-      red = 0;      green = 0;      blue = 15;      break;
+      red = 0;       green = 0;       blue = 15;      break;
      case 4:
-      red = 15;      green = 15;      blue = 0;      break;
+      red = 15;      green = 15;      blue = 0;       break;
      case 6:
-      red = 15;      green = 0;      blue = 15;      break;
+      red = 15;      green = 0;       blue = 15;      break;
      case 7:
-      red = 0;      green = 15;      blue = 15;      break;
+      red = 0;       green = 15;      blue = 15;      break;
      case 8:
       red = 15;      green = 15;      blue = 15;      break;
   }
 }
 
-
+/// convert an array with one byte per pixel to what amounts to an array of bits to send to LED strips
+/// codedColors: the input - each byte is the color of a pixel in the row
+/// output: the bits to stream to the entire set of strips. each call to this function modifies a subset of the array. the first two bytes contains the first bit for each strip. the second two bytes contains the second bit for each strip. etc
 void makeTetrisRow(uint8_t codedColors[], byte output[], int outputRowIndex){
   uint8_t decodedGreen[TETRIS_WIDTH];
   uint8_t decodedRed[TETRIS_WIDTH];
   uint8_t decodedBlue[TETRIS_WIDTH];
   uint8_t bits1, bits2;
+  const uint8_t RED_OFFSET = 8;
+  const uint8_t BLUE_OFFSET = 16;
+  const uint8_t BITS_PER_COLOR;
   
   for(int i=0; i<TETRIS_WIDTH; i++){
     uint8_t red, green, blue;
@@ -176,10 +184,10 @@ void makeTetrisRow(uint8_t codedColors[], byte output[], int outputRowIndex){
     decodedBlue[i] = blue;
   }
 
-  for (uint8_t j=0; j<8; j++){
+  for (uint8_t j=0; j<BITS_PER_COLOR; j++){
     bits1 = 0;
     bits2 = 0;
-    for(int i=0; i<TETRIS_WIDTH; i++){      
+    for(int i=0; i<TETRIS_WIDTH; i++){            
       if (i >= 4){
         bits1 = bits1 << 1;
         bits1 = bits1 | (((1 << j) & decodedGreen[i]) >> j);
@@ -189,10 +197,10 @@ void makeTetrisRow(uint8_t codedColors[], byte output[], int outputRowIndex){
         bits2 = bits2 | (((1 << j) & decodedGreen[i]) >> j);
       }
     }
-    output[(outputRowIndex * 2 * 24) + 2*j] = bits1 << 2;
-    output[(outputRowIndex * 2 * 24) + 2*j + 1] = bits2;
+    output[(outputRowIndex * BYTES_PER_ROW * BITS_PER_COLOR) + BYTES_PER_ROW*j] = bits1 << 2;
+    output[(outputRowIndex * BYTES_PER_ROW * BITS_PER_COLOR) + BYTES_PER_ROW*j + 1] = bits2;
   }
-  for (uint8_t j=0; j<8; j++){
+  for (uint8_t j=0; j<BITS_PER_COLOR; j++){
     bits1 = 0;
     bits2 = 0;
     for(int i=0; i<TETRIS_WIDTH; i++){      
@@ -205,10 +213,10 @@ void makeTetrisRow(uint8_t codedColors[], byte output[], int outputRowIndex){
         bits2 = bits2 | (((1 << j) & decodedRed[i]) >> j);
       }
     }
-    output[(outputRowIndex * 2 * 24) + 2 * (j + 8)] = bits1 << 2;
-    output[(outputRowIndex * 2 * 24) + 2 * (j + 8) + 1] = bits2;
+    output[(outputRowIndex * BYTES_PER_ROW * BITS_PER_COLOR) + BYTES_PER_ROW * (j + RED_OFFSET)] = bits1 << 2;
+    output[(outputRowIndex * BYTES_PER_ROW * BITS_PER_COLOR) + BYTES_PER_ROW * (j + RED_OFFSET) + 1] = bits2;
   }
-  for (uint8_t j=0; j<8; j++){
+  for (uint8_t j=0; j<BITS_PER_COLOR; j++){
     bits1 = 0;
     bits2 = 0;
     for(int i=0; i<TETRIS_WIDTH; i++){      
@@ -221,11 +229,9 @@ void makeTetrisRow(uint8_t codedColors[], byte output[], int outputRowIndex){
         bits2 = bits2 | (((1 << j) & decodedBlue[i]) >> j);
       }
     }
-    output[(outputRowIndex * 2 * 24) + 2 * (j + 16)] = bits1 << 2;
-    output[(outputRowIndex * 2 * 24) + 2 * (j + 16) + 1] = bits2;
+    output[(outputRowIndex * BYTES_PER_ROW * BITS_PER_COLOR) + BYTES_PER_ROW * (j + BLUE_OFFSET)] = bits1 << 2;
+    output[(outputRowIndex * BYTES_PER_ROW * BITS_PER_COLOR) + BYTES_PER_ROW * (j + BLUE_OFFSET) + 1] = bits2;
   }
-
-  
 }
 
 void uncompressTetrisRow(uint8_t compressedColors[], uint8_t uncompressedColors[]){
@@ -240,29 +246,19 @@ void showTetris(byte output[]){
   cli();
   
   for (int j=0; j<TETRIS_LENGTH; j++){
-    for (int i=0; i<2*24; i=i+2){
-      sendBitX8(output[j*2*24 + i], output[j*2*24 + i+1]);
+    //send a row
+    for (int i=0; i<BYTES_PER_ROW*BITS_PER_COLOR; i=i+BYTES_PER_ROW){
+      sendBitX8(output[j*BYTES_PER_ROW*BITS_PER_COLOR + i], output[j*BYTES_PER_ROW*BITS_PER_COLOR + i+1]);
     }
-    for (int i=0; i<2*24; i=i+2){
-      sendBitX8(output[j*2*24 + i], output[j*2*24 + i+1]);
+    //send the row again b/c we display each pixel 4 times - 2 rows and 2 columns. the rows in code and the columns in wiring.
+    for (int i=0; i<BYTES_PER_ROW*BITS_PER_COLOR; i=i+BYTES_PER_ROW){
+      sendBitX8(output[j*BYTES_PER_ROW*BITS_PER_COLOR + i], output[j*BYTES_PER_ROW*BITS_PER_COLOR + i+1]);
     } 
   }
   
   sei();
   show();
   
-}
-
-void showTetrisRow(byte output[], int rowIndex){
-  for (int i=rowIndex*2*24; i<2*24; i=i+2){
-    sendBitX8(output[i], output[i+1]);
-  } 
-}
-
-void showTetrisRows(byte output[], int rowCount){
-  for (int i=0; i<2*24*rowCount; i=i+2){
-    sendBitX8(output[i], output[i+1]);
-  } 
 }
 
 //credit: https://github.com/joshmarinacci/nespad-arduino/blob/master/NESpad.cpp
@@ -298,16 +294,54 @@ byte doButtonRead(bool last)
   return ret;
 }
 
+void doRefreshDisplay()
+{
+  uint8_t uncompressedColors[TETRIS_WIDTH];
+  byte bytDecodedColorSplits[BYTES_PER_ROW * BITS_PER_COLOR * TETRIS_LENGTH];
+  
+  for (int j=0; j<TETRIS_WIDTH; j++) uncompressedColors[j] = 0;
+  
+  for (int i=0; i<TETRIS_LENGTH; i++){
+    for (int j=0; j<(TETRIS_WIDTH); j++){
+      uncompressedColors[j] = m_objGame->currentDisplay(j,i);
+    }
+         
+    makeTetrisRow(uncompressedColors, bytDecodedColorSplits, i);      
+  }
+  
+  showTetris(bytDecodedColorSplits);
+  
+}
 
-int loopCount = 0;
-bool blnIncrement = true;
-bool blnRunning = false;
-Game* m_objGame;
+GridEnums::Command doReceiveInput()
+{
+  byte bytButton = readNES();
+  delay(150);
+  
+  switch(bytButton)
+  {
+    case 0b00000001:
+    return GridEnums::CLOCKWISE;
+    break;
+    case 0b00000010:
+    return GridEnums::COUNTERCLOCKWISE;
+    break;
+    case 0b00100000:
+    return GridEnums::DOWN;
+    break;
+    case 0b01000000:
+    return GridEnums::LEFT;
+    break;
+    case 0b10000000:
+    return GridEnums::RIGHT;
+    break;
+  }
+  return GridEnums::NONE;
+}
 
 void setup() {
   PIXEL_DDR = 0xff;    // Set all row pins to output
   PIXEL_DDR2 = 0xff;    // Set all row pins to output
-
   
   pinMode(PIN_LATCH, OUTPUT);
   pinMode(PIN_CLOCK,  OUTPUT);
@@ -326,63 +360,8 @@ void setup() {
   Serial.begin(9600);
 }
 
-void doRefreshDisplay()
-{
-  
-  //uint8_t compressedColors[TETRIS_WIDTH / 2];
-  uint8_t uncompressedColors[TETRIS_WIDTH];
-  byte bytDecodedColorSplits[2 * 24 * TETRIS_LENGTH];
-  
-  //for (int j=0; j<TETRIS_WIDTH / 2; j++) compressedColors[j] = 0;
-  for (int j=0; j<TETRIS_WIDTH; j++) uncompressedColors[j] = 0;
-  
-  for (int i=0; i<TETRIS_LENGTH; i++){
-  
-    for (int j=0; j<(TETRIS_WIDTH); j++){
-      //compressedColors[j] = bytCommand[i*(TETRIS_WIDTH / 2) + j];
-      uncompressedColors[j] = m_objGame->CurrentDisplay(j,i);
-    }
-    //uncompressTetrisRow(compressedColors, uncompressedColors);
-         
-    makeTetrisRow(uncompressedColors, bytDecodedColorSplits, i);      
-  }
-  
-  showTetris(bytDecodedColorSplits);
-  
-}
-
-GridEnums::Command doReceiveInput()
-{
-  byte bytButton = readNES();
-  delay(150);
-  Serial.print(bytButton);
-  Serial.write("\n");
-  switch(bytButton)
-  {
-    case 1:
-    return GridEnums::CLOCKWISE;
-    break;
-    case 2:
-    return GridEnums::COUNTERCLOCKWISE;
-    break;
-    case 32:
-    return GridEnums::DOWN;
-    break;
-    case 64:
-    return GridEnums::LEFT;
-    break;
-    case 128:
-    return GridEnums::RIGHT;
-    break;
-  }
-  return GridEnums::NONE;
-}
-
 void loop() {
   sendBlueRow(255);
   delay(500);
-  m_objGame->play();
-  
-  loopCount++;
- 
+  m_objGame->play();  
 }
