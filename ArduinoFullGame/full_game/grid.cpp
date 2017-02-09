@@ -4,11 +4,12 @@
 class Grid{
   private:
     static const int MAX_CLEARED_ROWS = 4;
-    GridPoint m_objStaticPoints;
     int m_lstClearingRows[MAX_CLEARED_ROWS];
     int m_intActualClearingRows = 0;
 
-    bool ShouldClearThisRow(int intRow)
+    GridPoint m_objStaticPoints;
+
+    bool shouldClearThisRow(int intRow)
     {
       for(int i : m_lstClearingRows)
       {
@@ -21,10 +22,8 @@ class Grid{
     static const int WIDTH = 10;
     static const int HEIGHT = 20;
     static const int LEFT_EDGE = 0;
-    int* ClearingRows() const { return m_lstClearingRows;  }
-    GridPoint StaticPoints() const {  return m_objStaticPoints; } 
-
-    int StaticPoint(int intColumn, int intRow)
+    
+    int getStaticPoint(int intColumn, int intRow)
     {
       return m_objStaticPoints.Points[intColumn][intRow];
     }
@@ -38,15 +37,15 @@ class Grid{
         }
     }
 
-    void LockShape(const Shape* objShape)
+    void lockShape(const Shape* objShape)
     {
-        for (Point& p : objShape->Points().Points)
+        for (Point& p : objShape->getPoints().Points)
         {
-            m_objStaticPoints.Points[p.X][p.Y] = objShape->Type();
+            m_objStaticPoints.Points[p.X][p.Y] = objShape->getType();
         }
     }
 
-    bool TryClear(const int intStartRow)
+    bool tryClear(const int intStartRow)
     {
         m_intActualClearingRows = 0;
         for (int row = intStartRow; row > intStartRow - MAX_CLEARED_ROWS && row >= 0; row--)
@@ -69,13 +68,13 @@ class Grid{
         return m_intActualClearingRows > 0;
     }
 
-    void FinishClear()
+    void finishClear()
     {
         int intRowsToDrop = 0;
   
         for (int row = HEIGHT - 1; row >= 0; row--)
         {
-            if (ShouldClearThisRow(row))
+            if (shouldClearThisRow(row))
             {
                 intRowsToDrop++;
             }
@@ -86,7 +85,7 @@ class Grid{
                     m_objStaticPoints.Points[column][row] = ShapeEnums::NONE;
                 }
             }
-            else if (intRowsToDrop > 0 && !ShouldClearThisRow(row))
+            else if (intRowsToDrop > 0 && !shouldClearThisRow(row))
             {
                 for (int column = LEFT_EDGE; column < LEFT_EDGE + WIDTH; column++)
                 {
@@ -98,12 +97,12 @@ class Grid{
         m_intActualClearingRows = 0;
     }
 
-    bool ShapeCanDrop(const Shape* objShape) const
+    bool shapeCanDrop(const Shape* objShape) const
     {
-        if (objShape->BottomRow() == HEIGHT - 1) return false;
+        if (objShape->getBottomRow() == HEIGHT - 1) return false;
   
         bool blnReturn = true;
-        for (Point p : objShape->Points().Points)
+        for (Point p : objShape->getPoints().Points)
         {
             ShapeEnums::Types objTest = m_objStaticPoints.Points[p.X][p.Y + 1];
             if (objTest != ShapeEnums::NONE) blnReturn = false;
