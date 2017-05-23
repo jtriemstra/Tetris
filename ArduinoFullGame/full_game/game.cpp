@@ -4,9 +4,14 @@
  
 class Game{
   private:
+    const uint8_t CLEARS_BETWEEN_SPEEDUP  = 5;
+    const unsigned long SPEEDUP_DECREMENTS = 200000;
+    
     unsigned long m_lngNextDrop = 0;
     unsigned long m_lngStopClearing = 0;
     unsigned long m_lngDropDelay = 1000000;
+    uint8_t m_intRowsCleared = 0;
+    uint8_t m_intNextSpeedup = CLEARS_BETWEEN_SPEEDUP;
     
     Shape* m_objCurrentShape;
     Grid m_objGrid;
@@ -70,24 +75,27 @@ class Game{
           switch (objThisCommand)
           {
               case GridEnums::LEFT:
-                  m_objCurrentShape->moveLeft(m_objGrid.LEFT_EDGE);
-                  break;
+                  m_objCurrentShape->moveLeft();
+                  break;                  
               case GridEnums::RIGHT:
-                  m_objCurrentShape->moveRight(m_objGrid.LEFT_EDGE + m_objGrid.WIDTH);
+                  m_objCurrentShape->moveRight();
                   break;
               case GridEnums::CLOCKWISE:
-                  m_objCurrentShape->rotateClockwise(m_objGrid.LEFT_EDGE, m_objGrid.LEFT_EDGE + m_objGrid.WIDTH);
+                  m_objCurrentShape->rotateClockwise();
                   break;
               case GridEnums::COUNTERCLOCKWISE:
                   m_objCurrentShape->rotateCounterclockwise();
                   break;
               case GridEnums::DOWN:
-                  if (m_objGrid.shapeCanDrop(m_objCurrentShape))
-                  {
-                      m_objCurrentShape->moveDown(m_objGrid.HEIGHT - 1);
-                  }
+                  m_objCurrentShape->moveDown();
                   break;
           }
+
+          if (m_objGrid.isCollision(m_objCurrentShape))
+          {
+            m_objCurrentShape->undoAction();
+          }
+          
           return objThisCommand != GridEnums::NONE;
       }
       return false;
@@ -99,14 +107,15 @@ class Game{
       {
           if (micros() >= m_lngNextDrop)
           {
-              if (m_objGrid.shapeCanDrop(m_objCurrentShape))
+              m_objCurrentShape->moveDown();
+              
+              if (!m_objGrid.isCollision(m_objCurrentShape))
               {
-                  m_objCurrentShape->moveDown(m_objGrid.HEIGHT - 1);
-                  m_lngNextDrop = micros() + m_lngDropDelay;
-                  
+                  m_lngNextDrop = micros() + m_lngDropDelay;                  
               }
               else
               {
+                  m_objCurrentShape->undoAction();
                   m_objGrid.lockShape(m_objCurrentShape);
                   delete m_objCurrentShape;
                   m_objCurrentState = GridEnums::LOCKED;            
@@ -126,7 +135,11 @@ class Game{
           {
               m_objCurrentState = GridEnums::CLEARING;
               m_lngStopClearing = micros() + 1000000;
-  
+              m_intRowsCleared = m_intRowsCleared + m_objGrid.getActualClearingRows();
+              if (m_intRowsCleared >= m_intNextSpeedup){
+                m_lngDropDelay = m_lngDropDelay - SPEEDUP_DECREMENTS;
+                m_intNextSpeedup = m_intNextSpeedup + CLEARS_BETWEEN_SPEEDUP;
+              }
           }
           else
           {

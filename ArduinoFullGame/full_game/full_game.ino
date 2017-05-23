@@ -39,7 +39,7 @@
 
 const byte PIN_LATCH = 13;
 const byte PIN_CLOCK = 12;
-const byte PIN_DATA = 2; 
+const byte PIN_DATA = A0; 
 
 const uint8_t BYTES_PER_ROW = 2;
 const uint8_t BITS_PER_COLOR = 24;
@@ -171,7 +171,7 @@ void makeTetrisRow(uint8_t codedColors[], byte output[], int outputRowIndex){
   uint8_t bits1, bits2;
   const uint8_t RED_OFFSET = 8;
   const uint8_t BLUE_OFFSET = 16;
-  const uint8_t BITS_PER_COLOR;
+  const uint8_t BITS_PER_SINGLE_COLOR = 8;
   
   for(int i=0; i<TETRIS_WIDTH; i++){
     uint8_t red, green, blue;
@@ -181,7 +181,7 @@ void makeTetrisRow(uint8_t codedColors[], byte output[], int outputRowIndex){
     decodedBlue[i] = blue;
   }
 
-  for (uint8_t j=0; j<BITS_PER_COLOR; j++){
+  for (uint8_t j=0; j<BITS_PER_SINGLE_COLOR; j++){
     bits1 = 0;
     bits2 = 0;
     for(int i=0; i<TETRIS_WIDTH; i++){            
@@ -197,7 +197,7 @@ void makeTetrisRow(uint8_t codedColors[], byte output[], int outputRowIndex){
     output[(outputRowIndex * BYTES_PER_ROW * BITS_PER_COLOR) + BYTES_PER_ROW*j] = bits1 << 2;
     output[(outputRowIndex * BYTES_PER_ROW * BITS_PER_COLOR) + BYTES_PER_ROW*j + 1] = bits2;
   }
-  for (uint8_t j=0; j<BITS_PER_COLOR; j++){
+  for (uint8_t j=0; j<BITS_PER_SINGLE_COLOR; j++){
     bits1 = 0;
     bits2 = 0;
     for(int i=0; i<TETRIS_WIDTH; i++){      
@@ -213,7 +213,7 @@ void makeTetrisRow(uint8_t codedColors[], byte output[], int outputRowIndex){
     output[(outputRowIndex * BYTES_PER_ROW * BITS_PER_COLOR) + BYTES_PER_ROW * (j + RED_OFFSET)] = bits1 << 2;
     output[(outputRowIndex * BYTES_PER_ROW * BITS_PER_COLOR) + BYTES_PER_ROW * (j + RED_OFFSET) + 1] = bits2;
   }
-  for (uint8_t j=0; j<BITS_PER_COLOR; j++){
+  for (uint8_t j=0; j<BITS_PER_SINGLE_COLOR; j++){
     bits1 = 0;
     bits2 = 0;
     for(int i=0; i<TETRIS_WIDTH; i++){      
@@ -293,6 +293,7 @@ byte doButtonRead(bool last)
 
 void doRefreshDisplay()
 {
+  Serial.write("refresh");
   uint8_t uncompressedColors[TETRIS_WIDTH];
   byte bytDecodedColorSplits[BYTES_PER_ROW * BITS_PER_COLOR * TETRIS_LENGTH];
   
@@ -312,6 +313,7 @@ void doRefreshDisplay()
 
 GridEnums::Command doReceiveInput()
 {
+  Serial.write("receive input");
   byte bytButton = readNES();
   delay(150);
   
@@ -358,6 +360,7 @@ void setup() {
 }
 
 void loop() {
+  //Serial.write("loop");
   sendBlueRow(255);
   delay(500);
   m_objGame->play();  
