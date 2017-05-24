@@ -39,9 +39,9 @@ const int TETRIS_LENGTH = 20;
 const int TETRIS_WIDTH = 10;
 const int STRING_LENGTH = 40;
 
-const byte PIN_LATCH = 13;
-const byte PIN_CLOCK = 12;
-const byte PIN_DATA = 2; 
+const byte PIN_LATCH = A0;
+const byte PIN_CLOCK = A2;
+const byte PIN_DATA = A1; 
 
 // Actually send the next set of 8 WS2812B encoded bits to the 8 pins.
 // We must to drop to asm to enusre that the complier does
@@ -369,10 +369,10 @@ GridEnums::Command doReceiveInput()
     return GridEnums::DOWN;
     break;
     case 64:
-    return GridEnums::LEFT;
+    return GridEnums::RIGHT;
     break;
     case 128:
-    return GridEnums::RIGHT;
+    return GridEnums::LEFT;
     break;
   }
   return GridEnums::NONE;
