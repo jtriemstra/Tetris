@@ -96,17 +96,20 @@ class Grid{
         m_intActualClearingRows = 0;
     }
 
-    bool shapeCanDrop(const Shape* objShape) const
+    bool isCollision(const Shape* objShape) const
     {
-        if (objShape->getBottomRow() == HEIGHT - 1) return false;
+        if (objShape->getRight() >= WIDTH) return true;
+        if (objShape->getLeft() < LEFT_EDGE) return true;
+        if (objShape->getBottomRow() == HEIGHT) return true;
   
-        bool blnReturn = true;
+        bool blnReturn = false;
         for (Point p : objShape->getPoints().Points)
         {
-            ShapeEnums::Types objTest = m_objStaticPoints.Points[p.X][p.Y + 1];
-            if (objTest != ShapeEnums::NONE) blnReturn = false;
+            ShapeEnums::Types objTest = m_objStaticPoints.Points[p.X][p.Y];
+            if (objTest != ShapeEnums::NONE) blnReturn = true;
         }
         return blnReturn;
-    }  
+    }
+
 };
 

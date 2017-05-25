@@ -67,24 +67,27 @@ class Game{
               switch (objThisCommand)
               {
                   case GridEnums::LEFT:
-                      m_objCurrentShape->moveLeft(m_objGrid.LEFT_EDGE);
+                      m_objCurrentShape->moveLeft();
                       break;
                   case GridEnums::RIGHT:
-                      m_objCurrentShape->moveRight(m_objGrid.LEFT_EDGE + m_objGrid.WIDTH);
+                      m_objCurrentShape->moveRight();
                       break;
                   case GridEnums::CLOCKWISE:
-                      m_objCurrentShape->rotateClockwise(m_objGrid.LEFT_EDGE, m_objGrid.LEFT_EDGE + m_objGrid.WIDTH);
+                      m_objCurrentShape->rotateClockwise();
                       break;
                   case GridEnums::COUNTERCLOCKWISE:
                       m_objCurrentShape->rotateCounterclockwise();
                       break;
                   case GridEnums::DOWN:
-                      if (m_objGrid.shapeCanDrop(m_objCurrentShape))
-                      {
-                          m_objCurrentShape->moveDown(m_objGrid.HEIGHT - 1);
-                      }
+                      m_objCurrentShape->moveDown();
                       break;
               }
+
+              if (m_objGrid.isCollision(m_objCurrentShape))
+              {
+                  m_objCurrentShape->restoreState();
+              }
+
               return objThisCommand != GridEnums::NONE;
           }
           return false;
@@ -96,14 +99,14 @@ class Game{
           {
               if (micros() >= m_lngNextDrop)
               {
-                  if (m_objGrid.shapeCanDrop(m_objCurrentShape))
+                  m_objCurrentShape->moveDown();
+                  if (!m_objGrid.isCollision(m_objCurrentShape))
                   {
-                      m_objCurrentShape->moveDown(m_objGrid.HEIGHT - 1);
-                      m_lngNextDrop = micros() + m_lngDropDelay;
-                      
+                      m_lngNextDrop = micros() + m_lngDropDelay;                      
                   }
                   else
                   {
+                      m_objCurrentShape->restoreState();
                       m_objGrid.lockShape(m_objCurrentShape);
                       delete m_objCurrentShape;
                       m_objCurrentState = GridEnums::LOCKED;            

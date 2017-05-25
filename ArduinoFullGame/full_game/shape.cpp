@@ -7,8 +7,18 @@ class Shape
       static const int POINTS_PER_SHAPE = 4;
       ShapeEnums::Types m_objType;
       ShapePoint m_objPoints;
+      ShapePoint m_objOldPoints;
       ShapeEnums::ClockwiseRotations m_objCurrentRotation = ShapeEnums::INITIAL;
-            
+
+      void stashState()
+      {
+        for (int i=0; i<POINTS_PER_SHAPE; i++)
+        {
+          m_objOldPoints.Points[i].X = m_objPoints.Points[i].X;
+          m_objOldPoints.Points[i].Y = m_objPoints.Points[i].Y;  
+        }
+      }
+
     public:
       ShapePoint getPoints() const { return m_objPoints; } 
       ShapeEnums::Types getType() const { return m_objType; }       
@@ -115,59 +125,65 @@ class Shape
         return intReturn;
     }
 
-    void moveDown(int intMaxRow)
+    int getLeft() const
     {
-        bool blnLegal = true;
+        int intReturn = 1000;
         for(int i=0; i<POINTS_PER_SHAPE; i++)
         {
-            if (m_objPoints.Points[i].Y == intMaxRow) blnLegal = false;
+            if (m_objPoints.Points[i].X < intReturn) intReturn = m_objPoints.Points[i].X;
         }
-        if (blnLegal)
-        {
-            for(int i=0; i<POINTS_PER_SHAPE; i++)
-            {
-                m_objPoints.Points[i].Y += 1;
-            }
+        return intReturn;
+    }
+
+    int getRight() const
+    {
+      int intReturn = -1000;
+      for(int i=0; i<POINTS_PER_SHAPE; i++)
+      {
+          if (m_objPoints.Points[i].X > intReturn) intReturn = m_objPoints.Points[i].X;
+      }
+      return intReturn;
+    }
+
+
+    void moveDown()
+    {
+        stashState();
+        for(int i=0; i<POINTS_PER_SHAPE; i++) {
+          m_objPoints.Points[i].Y += 1;
         }
     }
 
-    void moveLeft(int intMinLeft)
+    void moveLeft()
     {
-        bool blnLegal = true;
-        for(int i=0; i<POINTS_PER_SHAPE; i++)
-        {
-            if (m_objPoints.Points[i].X == intMinLeft) blnLegal = false;
-        }
-        if (blnLegal)
-        {
-            for(int i=0; i<POINTS_PER_SHAPE; i++)
-            {
-                m_objPoints.Points[i].X -= 1;
-            }
+        stashState();
+        for(int i=0; i<POINTS_PER_SHAPE; i++) {
+          m_objPoints.Points[i].X -= 1;
         }
     }
 
-    void moveRight(int intMaxRight)
+    void moveRight()
     {
-        bool blnLegal = true;
-        for(int i=0; i<POINTS_PER_SHAPE; i++)
-        {
-            if (m_objPoints.Points[i].X == intMaxRight - 1) blnLegal = false;
-        }
-        if (blnLegal)
-        {
-            for(int i=0; i<POINTS_PER_SHAPE; i++)
-            {
-                m_objPoints.Points[i].X += 1;
-            }
+        stashState();
+        for(int i=0; i<POINTS_PER_SHAPE; i++) {
+          m_objPoints.Points[i].X += 1;
         }
     }
 
-    void rotateClockwise(int intMinLeft, int intMaxRight)
+    void restoreState()
+      {
+        for (int i=0; i<POINTS_PER_SHAPE; i++)
+        {
+          m_objPoints.Points[i].X = m_objOldPoints.Points[i].X;
+          m_objPoints.Points[i].Y = m_objOldPoints.Points[i].Y;  
+        }
+      }
+
+    void rotateClockwise()
     {
         Point objTestPoints[POINTS_PER_SHAPE];
-        //for (int i=0; i<POINTS_PER_SHAPE; i++) objTestPoints[i] = new Point();
-        
+
+        stashState();
         switch (m_objType)
         {
             case ShapeEnums::SQUARE:
@@ -420,6 +436,8 @@ class Shape
 
     void rotateCounterclockwise()
     {
+        stashState();
+        
         switch (m_objType)
         {
             case ShapeEnums::SQUARE:
