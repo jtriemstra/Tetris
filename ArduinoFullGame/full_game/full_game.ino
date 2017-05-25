@@ -1,4 +1,5 @@
 #include "game.cpp"
+#include "constants.h"
 // Credit: https://wp.josh.com/2014/05/13/ws2812-neopixels-are-not-so-finicky-once-you-get-to-know-them/
 // These values depend on which pins your 8 strings are connected to and what board you are using 
 // More info on how to find these at http://www.arduino.cc/en/Reference/PortManipulation
@@ -34,10 +35,6 @@
 #define NS_PER_CYCLE ( NS_PER_SEC / CYCLES_PER_SEC )
 
 #define NS_TO_CYCLES(n) ( (n) / NS_PER_CYCLE )
-
-const byte TETRIS_LENGTH = 20;
-const byte TETRIS_WIDTH = 10;
-const byte STRING_LENGTH = 40;
 
 const byte PIN_LATCH = A0;
 const byte PIN_CLOCK = A2;

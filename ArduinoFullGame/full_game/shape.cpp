@@ -6,13 +6,12 @@ class Shape
     private:
       static const int POINTS_PER_SHAPE = 4;
       ShapeEnums::Types m_objType;
-      ShapePoint m_objPoints;// = new Point[4]{ new Point(), new Point(), new Point(), new Point()};
+      ShapePoint m_objPoints;
       ShapeEnums::ClockwiseRotations m_objCurrentRotation = ShapeEnums::INITIAL;
             
     public:
-      ShapePoint Points() const { return m_objPoints; } 
-      ShapeEnums::Types Type() const { return m_objType; } 
-      int InitialWidth() const {return 0;}
+      ShapePoint getPoints() const { return m_objPoints; } 
+      ShapeEnums::Types getType() const { return m_objType; }       
 
     Shape(){
       
@@ -21,7 +20,8 @@ class Shape
     Shape(ShapeEnums::Types objType)
     {
         m_objType = objType;
-        
+
+        //TODO: is there a more elegant way to do this? If a "shape" consisted of a 4x4 square instead of arbitrary points, might be able to do some math on it. Would take more runtime memory though.
         switch (m_objType)
         {
             case ShapeEnums::I:
@@ -97,7 +97,7 @@ class Shape
         }
     }
 
-    void Center()
+    void center()
     {
         for(int i=0; i<POINTS_PER_SHAPE; i++)
         {
@@ -105,7 +105,7 @@ class Shape
         }
     }
 
-    int BottomRow () const
+    int getBottomRow () const
     {
         int intReturn = -1000;
         for(int i=0; i<POINTS_PER_SHAPE; i++)
@@ -115,7 +115,7 @@ class Shape
         return intReturn;
     }
 
-    void MoveDown(int intMaxRow)
+    void moveDown(int intMaxRow)
     {
         bool blnLegal = true;
         for(int i=0; i<POINTS_PER_SHAPE; i++)
@@ -131,7 +131,7 @@ class Shape
         }
     }
 
-    void MoveLeft(int intMinLeft)
+    void moveLeft(int intMinLeft)
     {
         bool blnLegal = true;
         for(int i=0; i<POINTS_PER_SHAPE; i++)
@@ -147,7 +147,7 @@ class Shape
         }
     }
 
-    void MoveRight(int intMaxRight)
+    void moveRight(int intMaxRight)
     {
         bool blnLegal = true;
         for(int i=0; i<POINTS_PER_SHAPE; i++)
@@ -163,7 +163,7 @@ class Shape
         }
     }
 
-    void RotateClockwise(int intMinLeft, int intMaxRight)
+    void rotateClockwise(int intMinLeft, int intMaxRight)
     {
         Point objTestPoints[POINTS_PER_SHAPE];
         //for (int i=0; i<POINTS_PER_SHAPE; i++) objTestPoints[i] = new Point();
@@ -418,7 +418,7 @@ class Shape
         }
     }
 
-    void RotateCounterclockwise()
+    void rotateCounterclockwise()
     {
         switch (m_objType)
         {
