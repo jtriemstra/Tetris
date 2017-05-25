@@ -33,7 +33,7 @@ class Game{
       void play()
       {
           bool blnUpdateDisplay;
-          int loopCount=0;
+          
           while (true)
           {
               blnUpdateDisplay = false;
@@ -134,7 +134,7 @@ class Game{
               if (micros() > m_lngStopClearing)
               {
                   m_objGrid.FinishClear();
-                  m_lngStopClearing = 60 * 60 * 1000 * 1000;
+                  m_lngStopClearing = 60 * 60 * 1000 * 1000; //an hour. micros() will roll over soon after anyway, and you shouldn't play this that long :)
                   m_objCurrentState = GridEnums::IDLE;
               }
           }
