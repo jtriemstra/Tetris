@@ -100,6 +100,7 @@ class Grid{
         }
   
         m_intActualClearingRows = 0;
+        for(int i : m_lstClearingRows) m_lstClearingRows[i] = -1;
     }
 
     bool isCollision(const Shape* objShape) const

@@ -40,8 +40,9 @@ class Game{
       void play()
       {
           bool blnUpdateDisplay;
+          bool blnGameOver = false;
           
-          while (true)
+          while (!blnGameOver)
           {
               blnUpdateDisplay = false;
               blnUpdateDisplay = blnUpdateDisplay || tryGenerate();
@@ -49,6 +50,7 @@ class Game{
               blnUpdateDisplay = blnUpdateDisplay || tryDrop();
               tryClear();
               refreshDisplay(blnUpdateDisplay);
+              blnGameOver = testGameOver();
           }
       }
 
@@ -165,6 +167,16 @@ class Game{
                   m_fnRefreshDisplay();
               }
           }
+      }
+
+      bool testGameOver()
+      {
+          if (m_objCurrentState == GridEnums::IDLE && m_objCurrentShape->getTopRow() <= 0)
+          {
+            return true;
+          }
+
+          return false;
       }
 };
 

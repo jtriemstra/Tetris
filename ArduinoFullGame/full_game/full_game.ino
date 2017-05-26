@@ -43,6 +43,9 @@ const byte PIN_DATA = A1;
 const byte BYTES_PER_ROW = 2;
 const byte BITS_PER_COLOR = 24;
 
+bool m_blnIsPlaying = false;
+bool m_blnIsWaitAscending = true;
+
 Game* m_objGame;
 
 // Actually send the next set of 8 WS2812B encoded bits to the 8 pins.
@@ -359,7 +362,26 @@ void setup() {
 }
 
 void loop() {
-  sendBlueRow(255);
+  int intWaitCounter = 0;
+  while (!m_blnIsPlaying)
+  {
+    cli();
+    for(int i=0; i<STRING_LENGTH; i++){
+        if (i == intWaitCounter) sendWhiteRow(255);
+        else sendWhiteRow(0);
+    }
+    sei();
+    show();
+  
+    if (m_blnIsWaitAscending) intWaitCounter++;
+    else intWaitCounter--;
+  
+    if (intWaitCounter >= 39) m_blnIsWaitAscending = false;
+    if (intWaitCounter <= 1) m_blnIsWaitAscending = true;
+
+    delay(100);
+  }
+  
   delay(500);
   m_objGame->play();
  

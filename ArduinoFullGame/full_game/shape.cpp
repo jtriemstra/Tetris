@@ -125,6 +125,16 @@ class Shape
         return intReturn;
     }
 
+    int getTopRow () const
+    {
+        int intReturn = 1000;
+        for(int i=0; i<POINTS_PER_SHAPE; i++)
+        {
+            if (m_objPoints.Points[i].Y < intReturn) intReturn = m_objPoints.Points[i].Y;
+        }
+        return intReturn;
+    }
+
     int getLeft() const
     {
         int intReturn = 1000;
