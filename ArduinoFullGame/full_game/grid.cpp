@@ -26,6 +26,12 @@ class Grid{
     {
       return m_objStaticPoints.Points[intColumn][intRow];
     }
+
+    int getActualClearingRows()
+    {
+      return m_intActualClearingRows;
+    }
+
     
     Grid()
     {

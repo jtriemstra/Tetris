@@ -4,9 +4,15 @@
  
 class Game{
     private:
+      const uint8_t CLEARS_BETWEEN_SPEEDUP  = 5;
+      const unsigned long SPEEDUP_DECREMENTS = 200000;
+
       unsigned long m_lngNextDrop = 0;
       unsigned long m_lngStopClearing = 0;
       unsigned long m_lngDropDelay = 1000000;
+      uint8_t m_intRowsCleared = 0;
+      uint8_t m_intNextSpeedup = CLEARS_BETWEEN_SPEEDUP;
+
       
       Shape* m_objCurrentShape;
       Grid m_objGrid;
@@ -126,6 +132,12 @@ class Game{
               {
                   m_objCurrentState = GridEnums::CLEARING;
                   m_lngStopClearing = micros() + 1000000;
+
+                  m_intRowsCleared = m_intRowsCleared + m_objGrid.getActualClearingRows();
+                  if (m_intRowsCleared >= m_intNextSpeedup){
+                    m_lngDropDelay = m_lngDropDelay - SPEEDUP_DECREMENTS;
+                    m_intNextSpeedup = m_intNextSpeedup + CLEARS_BETWEEN_SPEEDUP;
+                  }
 
               }
               else
