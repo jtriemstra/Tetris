@@ -1,5 +1,6 @@
 #include "shape.cpp"
 #include "grid_point.cpp"
+#include <Arduino.h>
 
 class Grid{
   private:
@@ -35,7 +36,12 @@ class Grid{
     
     Grid()
     {
-        for(int x=0; x<WIDTH; x++){
+      reset();
+    }
+
+    void reset()
+    {
+      for(int x=0; x<WIDTH; x++){
             for(int y=0; y<HEIGHT; y++){
                 m_objStaticPoints.Points[x][y] = ShapeEnums::NONE;
             }
@@ -67,9 +73,9 @@ class Grid{
                 {
                     m_objStaticPoints.Points[column][row] = ShapeEnums::CLEARING;
                 }
-            }
+            } 
         }
-  
+        
         return m_intActualClearingRows > 0;
     }
 
@@ -98,9 +104,12 @@ class Grid{
                 }
             }
         }
+
+        String strOut = "rows to drop = ";
+        Serial.println(strOut + intRowsToDrop);
   
         m_intActualClearingRows = 0;
-        for(int i : m_lstClearingRows) m_lstClearingRows[i] = -1;
+        for(int i = 0; i<MAX_CLEARED_ROWS; i++) m_lstClearingRows[i] = -1;
     }
 
     bool isCollision(const Shape* objShape) const

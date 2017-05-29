@@ -41,6 +41,8 @@ class Game{
       {
           bool blnUpdateDisplay;
           bool blnGameOver = false;
+
+          m_objGrid.reset();
           
           while (!blnGameOver)
           {

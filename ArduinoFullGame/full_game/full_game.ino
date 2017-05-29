@@ -380,9 +380,12 @@ void loop() {
     if (intWaitCounter <= 1) m_blnIsWaitAscending = true;
 
     delay(100);
+
+    if (doReceiveInput() == GridEnums::LEFT) m_blnIsPlaying = true;
   }
   
   delay(500);
   m_objGame->play();
- 
+
+  m_blnIsPlaying = false;
 }
