@@ -8,6 +8,6 @@ Another interesting challenge was with the power. The LED strips require low vol
 
 I initially wrote most of the game logic in .NET, so I could more easily debug that while isolating myself from the aspects of the Arduino and physical electronics that were newer to me. Then I modified the .NET code to run on a PC, but send data to the Arduino over a serial port for display purposes. And ultimately migrated all the code to the Arduino.
 
-[Check out a video](https://youtu.be/cFZiP-f9wCc)
+<a href="https://youtu.be/cFZiP-f9wCc" target="_blank">Check out a video</a>
 
 ![Still image](tetris.jpg)
