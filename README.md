@@ -7,3 +7,5 @@ One of the most interesting challenges was that with 800 24-bit LEDs, the total 
 Another interesting challenge was with the power. The LED strips require low voltage, but fairly high current. I ended up using an old ATX power supply to provide this, and had to try a couple different thicknesses of wire before I got one with a low enough resistance.
 
 I initially wrote most of the game logic in .NET, so I could more easily debug that while isolating myself from the aspects of the Arduino and physical electronics that were newer to me. Then I modified the .NET code to run on a PC, but send data to the Arduino over a serial port for display purposes. And ultimately migrated all the code to the Arduino.
+
+![Still image](tetris.jpg)
